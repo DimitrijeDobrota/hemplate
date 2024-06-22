@@ -11,7 +11,7 @@ class HEMPLATE_EXPORT elementAtomic : public element
 {
 public:
   elementAtomic()
-      : element(Type::Atomic)
+      : element("", Type::Atomic)
   {
   }
 
@@ -22,6 +22,11 @@ public:
   ~elementAtomic() override                          = default;
 
   const char* get_name() const override { return Tag::get_name(); }
+
+  std::unique_ptr<element> clone() const override
+  {
+    return std::make_unique<elementAtomic<Tag>>(*this);
+  }
 
 private:
 };

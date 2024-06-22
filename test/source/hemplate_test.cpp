@@ -4,8 +4,10 @@
 
 int main()
 {
-  std::cout << hemplate::a() << std::endl;
-  std::cout << hemplate::meta() << std::endl;
+  using namespace hemplate; // NOLINT
+
+  std::cout << ul("Won't see").add(li("Item 1")).add(li("Item 2")) << std::endl;
+  std::cout << meta() << std::endl;
 
   return 0;
 }
