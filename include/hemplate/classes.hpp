@@ -27,8 +27,7 @@ struct tag
   static char const* get_name() { return Name.data(); }
 };
 
-namespace hemplate
-{
+namespace hemplate {
 
 using a          = elementBoolean<tag<"a">>;
 using abbr       = elementBoolean<tag<"abbr">>;

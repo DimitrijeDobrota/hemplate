@@ -3,8 +3,7 @@
 #include "hemplate/element.hpp"
 #include "hemplate/hemplate_export.hpp"
 
-namespace hemplate
-{
+namespace hemplate {
 
 template<typename Tag>
 class HEMPLATE_EXPORT elementBoolean : public element

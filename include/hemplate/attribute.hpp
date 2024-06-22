@@ -7,8 +7,7 @@
 #include "hemplate/hemplate_export.hpp"
 #include "hemplate/streamable.hpp"
 
-namespace hemplate
-{
+namespace hemplate {
 
 class HEMPLATE_EXPORT attribute : public streamable
 {
@@ -57,15 +56,8 @@ public:
   attributeList& operator=(attributeList&&)      = default;
   ~attributeList() override                      = default;
 
-  attributeList(std::initializer_list<attribute> list)
-      : m_attributes(list)
-  {
-  }
-
-  attributeList(attribute attr)  // NOLINT
-      : m_attributes({std::move(attr)})
-  {
-  }
+  attributeList(std::initializer_list<attribute> list);
+  attributeList(attribute attr);  // NOLINT
 
   attributeList& set(const std::string& name);
   attributeList& set(const std::string& name, const std::string& value);
@@ -76,6 +68,8 @@ public:
 
 private:
   std::vector<attribute> m_attributes;
+  attribute m_class = attribute("class");
+  attribute m_style = attribute("style");
 };
 
 }  // namespace hemplate

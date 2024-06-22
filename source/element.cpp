@@ -1,7 +1,6 @@
 #include "hemplate/element.hpp"
 
-namespace hemplate
-{
+namespace hemplate {
 
 element& element::add(const element& elem)
 {
@@ -32,35 +31,34 @@ void element::render(std::ostream& out) const
   const auto open_tag = [this, &out](bool atomic)
   {
     out << '<' << get_name();
-    if (!m_attributes.empty()) {
-      out << ' ';
-      m_attributes.render(out);
-    }
+    if (!m_attributes.empty()) out << ' ', m_attributes.render(out);
     out << (atomic ? " />" : ">");
   };
 
   const auto close_tag = [this, &out]() { out << "</" << get_name() << '>'; };
 
-  if (m_type == Type::Atomic) {
+  if (m_type == Type::Atomic)
+  {
     open_tag(true);
     return;
   }
 
-  if (!m_data.empty()) {
+  if (!m_data.empty())
+  {
     open_tag(false);
-    if (!m_embeded.empty()) {
-      m_embeded.render(out);
-    } else {
-      out << m_data;
-    }
+    if (!m_embeded.empty()) m_embeded.render(out);
+    else out << m_data;
     close_tag();
     return;
   }
 
-  if (m_embeded.empty()) {
+  if (m_embeded.empty())
+  {
     tgl_state();
     get_state() ? open_tag(false) : close_tag();
-  } else {
+  }
+  else
+  {
     open_tag(false);
     m_embeded.render(out);
     close_tag();
@@ -77,9 +75,7 @@ elementList& elementList::operator=(const elementList& rhs)
   if (this == &rhs) return *this;
 
   m_elems.clear();
-  for (const auto& elem : rhs.m_elems) {
-    add(*elem);
-  }
+  for (const auto& elem : rhs.m_elems) add(*elem);
 
   return *this;
 }
@@ -98,9 +94,7 @@ elementList& elementList::add(std::unique_ptr<element> elem)
 
 void elementList::render(std::ostream& out) const
 {
-  for (const auto& elem : m_elems) {
-    elem->render(out);
-  }
+  for (const auto& elem : m_elems) elem->render(out);
 }
 
 }  // namespace hemplate

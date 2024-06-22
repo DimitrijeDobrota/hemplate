@@ -8,8 +8,7 @@
 #include "hemplate/hemplate_export.hpp"
 #include "hemplate/streamable.hpp"
 
-namespace hemplate
-{
+namespace hemplate {
 
 class element;
 

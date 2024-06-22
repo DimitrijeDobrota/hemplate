@@ -4,8 +4,7 @@
 
 #include "hemplate/hemplate_export.hpp"
 
-namespace hemplate
-{
+namespace hemplate {
 
 class HEMPLATE_EXPORT streamable
 {
