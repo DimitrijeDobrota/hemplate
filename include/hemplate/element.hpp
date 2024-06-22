@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "hemplate/attribute.hpp"
 #include "hemplate/hemplate_export.hpp"
 #include "hemplate/streamable.hpp"
 
@@ -44,8 +45,13 @@ public:
     Boolean,
   };
 
-  explicit element(std::string data, Type type)
-      : m_data(std::move(data))
+  explicit element(attributeList attributes,
+                   elementList embedded,
+                   std::string data,
+                   Type type)
+      : m_attributes(std::move(attributes))
+      , m_embeded(std::move(embedded))
+      , m_data(std::move(data))
       , m_type(type)
   {
   }
@@ -59,23 +65,32 @@ public:
   Type get_type() const { return m_type; }
   std::string get_data() const { return m_data; }
   const elementList& get_embeded() const { return m_embeded; }
+  const attributeList& get_attributes() const { return m_attributes; }
+
+  virtual bool get_state() const { return false; }
+  virtual const char* get_name() const = 0;
 
   void set_data(const std::string& data) { m_data = data; }
   void set_embedded(const elementList& embed) { m_embeded = embed; }
+  void set_attributes(const attributeList& attrs) { m_attributes = attrs; }
+
+  virtual void tgl_state() const {}
 
   element& add(const element& elem);
   element& add(std::unique_ptr<element> elem);
 
-  virtual const char* get_name() const           = 0;
+  element& set(const std::string& name);
+  element& set(const std::string& name, const std::string& value);
+
   virtual std::unique_ptr<element> clone() const = 0;
 
   void render(std::ostream& out) const override;
 
 private:
+  attributeList m_attributes;
+  elementList m_embeded;
   std::string m_data;
   Type m_type;
-
-  elementList m_embeded;
 };
 
 }  // namespace hemplate

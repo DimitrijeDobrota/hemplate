@@ -15,24 +15,55 @@ element& element::add(std::unique_ptr<element> elem)
   return *this;
 }
 
+element& element::set(const std::string& name)
+{
+  m_attributes.set(name);
+  return *this;
+}
+
+element& element::set(const std::string& name, const std::string& value)
+{
+  m_attributes.set(name, value);
+  return *this;
+}
+
 void element::render(std::ostream& out) const
 {
-  if (get_type() == Type::Boolean && m_data.empty()) {
-    out << '<' << get_name() << '>';
+  const auto open_tag = [this, &out](bool atomic)
+  {
+    out << '<' << get_name();
+    if (!m_attributes.empty()) {
+      out << ' ';
+      m_attributes.render(out);
+    }
+    out << (atomic ? " />" : ">");
+  };
 
-    m_embeded.render(out);
+  const auto close_tag = [this, &out]() { out << "</" << get_name() << '>'; };
 
-    out << "</" << get_name() << '>';
-  } else {
-    out << '<' << get_name() << '>';
+  if (m_type == Type::Atomic) {
+    open_tag(true);
+    return;
+  }
 
+  if (!m_data.empty()) {
+    open_tag(false);
     if (!m_embeded.empty()) {
       m_embeded.render(out);
     } else {
       out << m_data;
     }
+    close_tag();
+    return;
+  }
 
-    out << "</" << get_name() << '>';
+  if (m_embeded.empty()) {
+    tgl_state();
+    get_state() ? open_tag(false) : close_tag();
+  } else {
+    open_tag(false);
+    m_embeded.render(out);
+    close_tag();
   }
 }
 

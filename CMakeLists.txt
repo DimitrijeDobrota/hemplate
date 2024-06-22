@@ -4,7 +4,7 @@ include(cmake/prelude.cmake)
 
 project(
     hemplate
-    VERSION 0.1.2
+    VERSION 0.1.3
     DESCRIPTION "Simple HTML template engine"
     HOMEPAGE_URL "https://git.dimitrijedobrota.com/hemplate.git"
     LANGUAGES CXX
@@ -18,6 +18,7 @@ include(cmake/variables.cmake)
 add_library(
     hemplate_hemplate
     source/element.cpp
+    source/attribute.cpp
 )
 add_library(hemplate::hemplate ALIAS hemplate_hemplate)
 
