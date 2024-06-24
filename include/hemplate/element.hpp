@@ -20,6 +20,13 @@ public:
   elementList(elementList&&)            = default;
   elementList& operator=(elementList&&) = default;
 
+  template<class... Ts>
+  explicit elementList(Ts&&... args)
+  {
+    std::initializer_list<element*> list = {&args...};
+    for (const auto& elem : list) add(*elem);
+  }
+
   // explicitly clone all the elements
   elementList(const elementList& rhs);
   elementList& operator=(const elementList& rhs);
