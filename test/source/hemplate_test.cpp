@@ -11,15 +11,15 @@ int main()
                                 {"class", "home_ul"},
                                 {"style", "margin-bottom: 1em"}});
 
-  std::cout << html() << std::endl;
-  std::cout << ul("Won't see", ul_attrs)
+  std::cout << html::html() << std::endl;
+  std::cout << html::ul("Won't see", ul_attrs)
                    .set("style", "margin-top: 1em")
                    .set("class", "center")
-                   .add(li("Item 1", li_attrs).set("class", "item1"))
-                   .add(li("Item 2", li_attrs).set("class", "item2"))
+                   .add(html::li("Item 1", li_attrs).set("class", "item1"))
+                   .add(html::li("Item 2", li_attrs).set("class", "item2"))
             << std::endl;
-  std::cout << meta() << std::endl;
-  std::cout << html() << std::endl;
+  std::cout << html::meta() << std::endl;
+  std::cout << html::html() << std::endl;
 
   return 0;
 }
