@@ -24,6 +24,12 @@ bool attribute::operator==(const attribute& rhs) const
   return m_name == rhs.m_name && m_value == rhs.m_value;
 }
 
+bool attributeList::empty() const
+{
+  return m_attributes.empty() && m_class.get_value().empty()
+      && m_style.get_value().empty();
+}
+
 void attribute::render(std::ostream& out) const
 {
   out << get_name() << "=\"" << get_value() << "\"";
@@ -34,7 +40,6 @@ attributeList& attributeList::set(const std::string& name)
   if (name != "class" && name != "style") m_attributes.emplace_back(name);
   return *this;
 }
-
 attributeList& attributeList::set(const std::string& name,
                                   const std::string& value)
 {

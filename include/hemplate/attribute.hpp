@@ -62,7 +62,7 @@ public:
   attributeList& set(const std::string& name);
   attributeList& set(const std::string& name, const std::string& value);
 
-  bool empty() const { return m_attributes.empty(); }
+  bool empty() const;
 
   void render(std::ostream& out) const override;
 
