@@ -29,7 +29,55 @@ struct tag
   static char const* get_name() { return Name.data(); }
 };
 
+class comment : public elementBoolean<tag<"">>
+{
+public:
+  comment() = default;
+  explicit comment(std::string text)
+      : elementBoolean(std::move(text))
+  {
+  }
+
+  void render(std::ostream& out) const override
+  {
+    if (get_data().empty())
+    {
+      tgl_state();
+      out << (get_state() ? "<!-- " : " -->");
+    }
+    else out << "<!-- " << get_data() << " -->";
+  }
+};
+
+class xml : public elementAtomic<tag<"xml">>
+{
+public:
+  explicit xml(std::string version = "1.0", std::string encoding = "UTF-8")
+      : m_version(std::move(version))
+      , m_encoding(std::move(encoding))
+  {
+  }
+
+  void render(std::ostream& out) const override
+  {
+    out << R"(<?xml version=")" << m_version << '"';
+    out << R"( encoding=")" << m_encoding << "\"?>";
+  }
+
+private:
+  std::string m_version;
+  std::string m_encoding;
+};
+
 namespace html {
+
+class doctype : public elementAtomic<tag<"doctype">>
+{
+public:
+  explicit doctype() = default;
+
+  void render(std::ostream& out) const override { out << "<!DOCTYPE html>"; }
+};
 
 using a          = elementBoolean<tag<"a">>;
 using abbr       = elementBoolean<tag<"abbr">>;
@@ -148,8 +196,31 @@ using wbr        = elementAtomic<tag<"wbr">>;
 
 namespace rss {
 
+class rss : public elementBoolean<tag<"rss">>
+{
+public:
+  explicit rss(std::string version = "2.0",
+               std::string xmlns   = "http://www.w3.org/2005/Atom")
+      : elementBoolean(attributeList(
+          {{"version", std::move(version)}, {"xmlns:atom", std::move(xmlns)}}))
+  {
+  }
+};
+
+class atomLink : public elementAtomic<tag<"atom:link">>
+{
+public:
+  explicit atomLink(std::string rel  = "self",
+                    std::string type = "application/rss+xml")
+      : elementAtomic(
+          attributeList({{"rel", std::move(rel)}, {"type", std::move(type)}}))
+  {
+  }
+};
+
 using author         = elementBoolean<tag<"author">>;
 using category       = elementBoolean<tag<"category">>;
+using channel        = elementBoolean<tag<"channel">>;
 using cloud          = elementAtomic<tag<"cloud">>;
 using comments       = elementBoolean<tag<"comments">>;
 using copyright      = elementBoolean<tag<"copyright">>;
@@ -160,6 +231,7 @@ using generator      = elementBoolean<tag<"generator">>;
 using guid           = elementBoolean<tag<"guid">>;
 using height         = elementBoolean<tag<"height">>;
 using image          = elementBoolean<tag<"image">>;
+using item           = elementBoolean<tag<"item">>;
 using language       = elementBoolean<tag<"language">>;
 using lastBuildDate  = elementBoolean<tag<"lastBuildDate">>;
 using link           = elementBoolean<tag<"link">>;
@@ -176,7 +248,6 @@ using ttl            = elementBoolean<tag<"ttl">>;
 using url            = elementBoolean<tag<"url">>;
 using webMaster      = elementBoolean<tag<"webMaster">>;
 using width          = elementBoolean<tag<"width">>;
-using atomLink       = elementAtomic<tag<"atom:link">>;
 
 }  // namespace rss
 
@@ -209,5 +280,25 @@ using updated       = elementBoolean<tag<"updated">>;
 using usagePoint    = elementBoolean<tag<"usagePoint">>;
 
 }  // namespace atom
+
+namespace sitemap {
+
+class urlset : public elementBoolean<tag<"urlset">>
+{
+public:
+  explicit urlset(
+      std::string xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9")
+      : elementBoolean(attributeList({"xmlns", std::move(xmlns)}))
+  {
+  }
+};
+
+using changefreq = elementBoolean<tag<"changefreq">>;
+using lastmod    = elementBoolean<tag<"lastmod">>;
+using loc        = elementBoolean<tag<"loc">>;
+using url        = elementBoolean<tag<"url">>;
+using priority   = elementBoolean<tag<"priority">>;
+
+}  // namespace sitemap
 
 }  // namespace hemplate

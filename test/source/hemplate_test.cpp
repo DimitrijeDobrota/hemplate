@@ -11,6 +11,7 @@ int main()
                                 {"class", "home_ul"},
                                 {"style", "margin-bottom: 1em"}});
 
+  std::cout << comment("Hello this is a commen");
   std::cout << html::html() << std::endl;
   std::cout << html::ul("Won't see", ul_attrs)
                    .set("style", "margin-top: 1em")
@@ -20,6 +21,11 @@ int main()
             << std::endl;
   std::cout << html::meta() << std::endl;
   std::cout << html::html() << std::endl;
+
+  std::cout << comment();
+  std::cout << "split ";
+  std::cout << "comment ";
+  std::cout << comment() << std::endl;
 
   return 0;
 }
