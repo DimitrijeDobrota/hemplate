@@ -253,13 +253,21 @@ using width          = elementBoolean<tag<"width">>;
 
 namespace atom {
 
+class feed : public elementBoolean<tag<"feed">>
+{
+public:
+  explicit feed(std::string xmlns = "http://www.w3.org/2005/Atom")
+      : elementBoolean(attributeList({{"xmlns", std::move(xmlns)}}))
+  {
+  }
+};
+
 using author        = elementBoolean<tag<"author">>;
 using category      = elementBoolean<tag<"category">>;
 using content       = elementBoolean<tag<"content">>;
 using contributor   = elementBoolean<tag<"contributor">>;
 using div           = elementBoolean<tag<"div">>;
 using entry         = elementBoolean<tag<"entry">>;
-using feed          = elementBoolean<tag<"feed">>;
 using generator     = elementBoolean<tag<"generator">>;
 using icon          = elementBoolean<tag<"icon">>;
 using id            = elementBoolean<tag<"id">>;
