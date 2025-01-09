@@ -34,6 +34,8 @@ Refer to [GNU cgicc documentation](https://www.gnu.org/software/chicc/)
 
 ## Version History
 
+- 0.2
+    * Library works
 - 0.1
     * Initial development phase
     * Getting a feel for the features and needs

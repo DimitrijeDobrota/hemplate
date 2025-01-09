@@ -4,7 +4,7 @@ include(cmake/prelude.cmake)
 
 project(
     hemplate
-    VERSION 0.1.11
+    VERSION 0.2.0
     DESCRIPTION "Simple HTML template engine"
     HOMEPAGE_URL "https://git.dimitrijedobrota.com/hemplate.git"
     LANGUAGES CXX
