@@ -19,6 +19,7 @@ Checks: "*,\
   -readability-magic-numbers,\
   fuchsia-multiple-inheritance,\
   -misc-no-recursion,\
+  -performance-avoid-endl,\
   -misc-non-private-member-variables-in-classes"
 WarningsAsErrors: ''
 CheckOptions:

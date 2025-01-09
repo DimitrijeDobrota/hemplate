@@ -1,3 +1,8 @@
+#include <memory>
+#include <ostream>
+#include <string>
+#include <utility>
+
 #include "hemplate/element.hpp"
 
 namespace hemplate {
@@ -28,6 +33,12 @@ element& element::set(const std::string& name, const std::string& value)
 
 void element::render(std::ostream& out) const
 {
+  if (*get_name() == '\0')
+  {
+    out << m_data;
+    return;
+  }
+
   const auto open_tag = [this, &out](bool atomic)
   {
     out << '<' << get_name();

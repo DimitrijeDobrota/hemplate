@@ -23,7 +23,7 @@ public:
   template<class... Ts>
   explicit elementList(Ts&&... args)
   {
-    std::initializer_list<element*> list = {&args...};
+    std::initializer_list<element*> list = {&std::forward(args)...};
     for (const auto& elem : list) add(*elem);
   }
 
@@ -45,7 +45,7 @@ private:
 class HEMPLATE_EXPORT element : public streamable
 {
 public:
-  enum class Type
+  enum class Type : uint8_t
   {
     Atomic,
     Boolean,

@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "hemplate/classes.hpp"
+#include "hemplate/attribute.hpp"
 
 int main()
 {

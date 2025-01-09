@@ -179,6 +179,7 @@ using table      = elementBoolean<tag<"table">>;
 using tbody      = elementBoolean<tag<"tbody">>;
 using td         = elementBoolean<tag<"td">>;
 using textarea   = elementBoolean<tag<"textarea">>;
+using text       = elementBoolean<tag<"">>;
 using tfoot      = elementBoolean<tag<"tfoot">>;
 using th         = elementBoolean<tag<"th">>;
 using thead      = elementBoolean<tag<"thead">>;
@@ -201,8 +202,8 @@ class rss : public elementBoolean<tag<"rss">>
 public:
   explicit rss(std::string version = "2.0",
                std::string xmlns   = "http://www.w3.org/2005/Atom")
-      : elementBoolean(attributeList(
-          {{"version", std::move(version)}, {"xmlns:atom", std::move(xmlns)}}))
+      : elementBoolean(attributeList({{"version", std::move(version)},
+                                      {"xmlns:atom", std::move(xmlns)}}))
   {
   }
 };
@@ -212,8 +213,8 @@ class atomLink : public elementAtomic<tag<"atom:link">>
 public:
   explicit atomLink(std::string rel  = "self",
                     std::string type = "application/rss+xml")
-      : elementAtomic(
-          attributeList({{"rel", std::move(rel)}, {"type", std::move(type)}}))
+      : elementAtomic(attributeList(
+            {{"rel", std::move(rel)}, {"type", std::move(type)}}))
   {
   }
 };
@@ -242,6 +243,7 @@ using rating         = elementBoolean<tag<"rating">>;
 using skipDays       = elementBoolean<tag<"skipDays">>;
 using skipHours      = elementBoolean<tag<"skipHours">>;
 using source         = elementBoolean<tag<"source">>;
+using text           = elementBoolean<tag<"">>;
 using textinput      = elementBoolean<tag<"textinput">>;
 using title          = elementBoolean<tag<"title">>;
 using ttl            = elementBoolean<tag<"ttl">>;
@@ -282,6 +284,7 @@ using rights        = elementBoolean<tag<"rights">>;
 using source        = elementBoolean<tag<"source">>;
 using subtitle      = elementBoolean<tag<"subtitle">>;
 using summary       = elementBoolean<tag<"summary">>;
+using text          = elementBoolean<tag<"">>;
 using title         = elementBoolean<tag<"title">>;
 using update        = elementBoolean<tag<"update">>;
 using updated       = elementBoolean<tag<"updated">>;
