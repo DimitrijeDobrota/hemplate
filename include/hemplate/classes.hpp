@@ -197,6 +197,9 @@ using wbr        = elementAtomic<tag<"wbr">>;
 
 namespace rss {
 
+std::string format_time(int64_t sec);
+std::string format_time_now();
+
 class rss : public elementBoolean<tag<"rss">>
 {
 public:
@@ -255,6 +258,9 @@ using width          = elementBoolean<tag<"width">>;
 
 namespace atom {
 
+std::string format_time(int64_t sec);
+std::string format_time_now();
+
 class feed : public elementBoolean<tag<"feed">>
 {
 public:
@@ -269,6 +275,7 @@ using category      = elementBoolean<tag<"category">>;
 using content       = elementBoolean<tag<"content">>;
 using contributor   = elementBoolean<tag<"contributor">>;
 using div           = elementBoolean<tag<"div">>;
+using email         = elementBoolean<tag<"email">>;
 using entry         = elementBoolean<tag<"entry">>;
 using generator     = elementBoolean<tag<"generator">>;
 using icon          = elementBoolean<tag<"icon">>;
@@ -286,8 +293,8 @@ using subtitle      = elementBoolean<tag<"subtitle">>;
 using summary       = elementBoolean<tag<"summary">>;
 using text          = elementBoolean<tag<"">>;
 using title         = elementBoolean<tag<"title">>;
-using update        = elementBoolean<tag<"update">>;
 using updated       = elementBoolean<tag<"updated">>;
+using uri           = elementBoolean<tag<"uri">>;
 using usagePoint    = elementBoolean<tag<"usagePoint">>;
 
 }  // namespace atom
