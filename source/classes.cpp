@@ -3,6 +3,10 @@
 #include <format>
 #include <string>
 
+#include "hemplate/classes.hpp"
+
+namespace {
+
 auto sec_since_epoch(int64_t sec)
 {
   return std::chrono::time_point_cast<std::chrono::seconds>(
@@ -17,6 +21,8 @@ auto get_time_now()
              .time_since_epoch()
       / std::chrono::seconds(1);
 }
+
+}  // namespace
 
 namespace hemplate::atom {
 

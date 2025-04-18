@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cstdint>
 
 #include "hemplate/elementAtomic.hpp"
 #include "hemplate/elementBoolean.hpp"
@@ -197,7 +198,7 @@ using wbr        = elementAtomic<tag<"wbr">>;
 
 namespace rss {
 
-std::string format_time(int64_t sec);
+std::string format_time(std::int64_t sec);
 std::string format_time_now();
 
 class rss : public elementBoolean<tag<"rss">>
@@ -258,7 +259,7 @@ using width          = elementBoolean<tag<"width">>;
 
 namespace atom {
 
-std::string format_time(int64_t sec);
+std::string format_time(std::int64_t sec);
 std::string format_time_now();
 
 class feed : public elementBoolean<tag<"feed">>
