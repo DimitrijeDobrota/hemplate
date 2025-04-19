@@ -3,8 +3,7 @@
 #include <array>
 #include <cstdint>
 
-#include "hemplate/elementAtomic.hpp"
-#include "hemplate/elementBoolean.hpp"
+#include "hemplate/element.hpp"
 #include "hemplate/hemplate_export.hpp"
 
 namespace hemplate {
@@ -30,6 +29,7 @@ struct tag
   static char const* get_name() { return Name.data(); }
 };
 
+/*
 class comment : public elementBoolean<tag<"">>
 {
 public:
@@ -69,9 +69,11 @@ private:
   std::string m_version;
   std::string m_encoding;
 };
+*/
 
 namespace html {
 
+/*
 class doctype : public elementAtomic<tag<"doctype">>
 {
 public:
@@ -79,6 +81,7 @@ public:
 
   void render(std::ostream& out) const override { out << "<!DOCTYPE html>"; }
 };
+*/
 
 using a          = elementBoolean<tag<"a">>;
 using abbr       = elementBoolean<tag<"abbr">>;
@@ -201,6 +204,7 @@ namespace rss {
 std::string format_time(std::int64_t sec);
 std::string format_time_now();
 
+/*
 class rss : public elementBoolean<tag<"rss">>
 {
 public:
@@ -222,6 +226,7 @@ public:
   {
   }
 };
+*/
 
 using author         = elementBoolean<tag<"author">>;
 using category       = elementBoolean<tag<"category">>;
@@ -262,6 +267,7 @@ namespace atom {
 std::string format_time(std::int64_t sec);
 std::string format_time_now();
 
+/*
 class feed : public elementBoolean<tag<"feed">>
 {
 public:
@@ -270,6 +276,7 @@ public:
   {
   }
 };
+*/
 
 using author        = elementBoolean<tag<"author">>;
 using category      = elementBoolean<tag<"category">>;
@@ -302,6 +309,7 @@ using usagePoint    = elementBoolean<tag<"usagePoint">>;
 
 namespace sitemap {
 
+/*
 class urlset : public elementBoolean<tag<"urlset">>
 {
 public:
@@ -311,6 +319,7 @@ public:
   {
   }
 };
+*/
 
 using changefreq = elementBoolean<tag<"changefreq">>;
 using lastmod    = elementBoolean<tag<"lastmod">>;

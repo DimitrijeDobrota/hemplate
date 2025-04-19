@@ -1,28 +1,42 @@
 #pragma once
 
+#include <format>
 #include <ostream>
 
 #include "hemplate/hemplate_export.hpp"
 
 namespace hemplate {
 
+template<typename D>
 class HEMPLATE_EXPORT streamable
 {
-public:
-  streamable()                                 = default;
-  streamable(const streamable&)                = default;
-  streamable(streamable&&) noexcept            = default;
-  streamable& operator=(const streamable&)     = default;
-  streamable& operator=(streamable&&) noexcept = default;
-  virtual ~streamable()                        = default;
+  friend D;
 
-  virtual void render(std::ostream& out) const = 0;
+  streamable() = default;
+
+public:
+  bool operator==(const streamable& rhs) const = default;
 
   friend std::ostream& operator<<(std::ostream& out, const streamable& obj)
   {
-    obj.render(out);
-    return out;
+    return out << static_cast<std::string>(static_cast<D&>(obj));
   }
 };
+
+// NOLINTNEXTLINE cppcoreguidelines-macro-usage
+#define CUSTOM_FORMAT(Type)                                                   \
+  template<>                                                                  \
+  struct std::formatter<Type>                                                 \
+  {                                                                           \
+    constexpr auto parse(std::format_parse_context& ctx)                      \
+    {                                                                         \
+      return ctx.begin();                                                     \
+    }                                                                         \
+                                                                              \
+    auto format(const Type& type, std::format_context& ctx) const             \
+    {                                                                         \
+      return std::format_to(ctx.out(), "{}", static_cast<std::string>(type)); \
+    }                                                                         \
+  };
 
 }  // namespace hemplate

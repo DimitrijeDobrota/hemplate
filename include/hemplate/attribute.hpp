@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -9,16 +10,9 @@
 
 namespace hemplate {
 
-class HEMPLATE_EXPORT attribute : public streamable
+class HEMPLATE_EXPORT attribute : public streamable<attribute>
 {
 public:
-  attribute()                            = default;
-  attribute(const attribute&)            = default;
-  attribute(attribute&&)                 = default;
-  attribute& operator=(const attribute&) = default;
-  attribute& operator=(attribute&&)      = default;
-  ~attribute() override                  = default;
-
   attribute(std::string name)  // NOLINT
       : m_name(std::move(name))
   {
@@ -30,8 +24,7 @@ public:
   {
   }
 
-  bool operator!=(const attribute& rhs) const;
-  bool operator==(const attribute& rhs) const;
+  bool operator==(const attribute& rhs) const = default;
 
   const std::string& get_name() const { return m_name; }
   const std::string& get_value() const { return m_value; }
@@ -39,22 +32,23 @@ public:
   void set_name(const std::string& name) { m_name = name; }
   void set_value(const std::string& value) { m_value = value; }
 
-  void render(std::ostream& out) const override;
+  bool empty() const { return get_value().empty(); }
+
+  // NOLINTNEXTLINE *-explicit-constructor
+  operator std::string() const
+  {
+    return get_name() + "=\"" + get_value() + "\" ";
+  }
 
 private:
   std::string m_name;
   std::string m_value;
 };
 
-class HEMPLATE_EXPORT attributeList : public streamable
+class HEMPLATE_EXPORT attributeList : public streamable<attributeList>
 {
 public:
-  attributeList()                                = default;
-  attributeList(const attributeList&)            = default;
-  attributeList(attributeList&&)                 = default;
-  attributeList& operator=(const attributeList&) = default;
-  attributeList& operator=(attributeList&&)      = default;
-  ~attributeList() override                      = default;
+  attributeList() = default;
 
   attributeList(std::initializer_list<attribute> list);
   attributeList(attribute attr);  // NOLINT
@@ -64,7 +58,30 @@ public:
 
   bool empty() const;
 
-  void render(std::ostream& out) const override;
+  explicit operator std::string() const
+  {
+    std::string res;
+
+    if (!m_class.empty())
+    {
+      res += m_class;
+      res += ' ';
+    }
+
+    if (!m_style.empty())
+    {
+      res += m_style;
+      res += ' ';
+    }
+
+    for (const auto& attr : m_attributes)
+    {
+      res += attr;
+      res += ' ';
+    }
+
+    return res;
+  }
 
 private:
   std::vector<attribute> m_attributes;
@@ -73,3 +90,6 @@ private:
 };
 
 }  // namespace hemplate
+
+CUSTOM_FORMAT(hemplate::attribute)
+CUSTOM_FORMAT(hemplate::attributeList)

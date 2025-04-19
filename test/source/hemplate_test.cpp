@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "hemplate/classes.hpp"
 #include "hemplate/attribute.hpp"
+#include "hemplate/classes.hpp"
 
 int main()
 {
@@ -12,21 +12,23 @@ int main()
                                 {"class", "home_ul"},
                                 {"style", "margin-bottom: 1em"}});
 
-  std::cout << comment("Hello this is a commen");
+  // std::cout << comment("Hello this is a commen");
   std::cout << html::html() << std::endl;
-  std::cout << html::ul("Won't see", ul_attrs)
+  std::cout << html::ul("Won't see")
                    .set("style", "margin-top: 1em")
                    .set("class", "center")
-                   .add(html::li("Item 1", li_attrs).set("class", "item1"))
-                   .add(html::li("Item 2", li_attrs).set("class", "item2"))
+                   .add(html::li("Item 1").set("class", "item1"))
+                   .add(html::li("Item 2").set("class", "item2"))
             << std::endl;
   std::cout << html::meta() << std::endl;
   std::cout << html::html() << std::endl;
 
-  std::cout << comment();
-  std::cout << "split ";
-  std::cout << "comment ";
-  std::cout << comment() << std::endl;
+  /*
+    std::cout << comment();
+    std::cout << "split ";
+    std::cout << "comment ";
+    std::cout << comment() << std::endl;
+  */
 
   return 0;
 }

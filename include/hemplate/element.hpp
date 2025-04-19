@@ -1,102 +1,125 @@
 #pragma once
 
 #include <memory>
+#include <span>
 #include <string>
 #include <vector>
 
 #include "hemplate/attribute.hpp"
 #include "hemplate/hemplate_export.hpp"
-#include "hemplate/streamable.hpp"
 
 namespace hemplate {
 
-class element;
-
-class HEMPLATE_EXPORT elementList : public streamable
+class HEMPLATE_EXPORT element
 {
-public:
-  elementList()                         = default;
-  ~elementList() override               = default;
-  elementList(elementList&&)            = default;
-  elementList& operator=(elementList&&) = default;
-
-  template<class... Ts>
-  explicit elementList(Ts&&... args)
-  {
-    std::initializer_list<element*> list = {&std::forward(args)...};
-    for (const auto& elem : list) add(*elem);
-  }
-
-  // explicitly clone all the elements
-  elementList(const elementList& rhs);
-  elementList& operator=(const elementList& rhs);
-
-  elementList& add(const element& elem);
-  elementList& add(std::unique_ptr<element> elem);
-
-  bool empty() const { return m_elems.empty(); }
-
-  void render(std::ostream& out) const override;
-
-private:
-  std::vector<std::unique_ptr<element>> m_elems;
-};
-
-class HEMPLATE_EXPORT element : public streamable
-{
-public:
   enum class Type : uint8_t
   {
     Atomic,
     Boolean,
+    Comment,
   };
 
-  explicit element(attributeList attributes,
-                   elementList embedded,
-                   std::string data,
-                   Type type)
-      : m_attributes(std::move(attributes))
-      , m_embeded(std::move(embedded))
-      , m_data(std::move(data))
-      , m_type(type)
+  Type m_type;
+
+  std::string m_name;
+  std::string m_data;
+
+  std::vector<element> m_children;
+  attributeList m_attributes;
+
+  explicit element(Type type,
+                   std::string_view name,
+                   const std::derived_from<element> auto&... children)
+      : m_type(type)
+      , m_name(name)
+      , m_children(std::initializer_list<element> {children...})
   {
   }
 
-  element(const element&)                = default;
-  element(element&&) noexcept            = default;
-  element& operator=(const element&)     = default;
-  element& operator=(element&&) noexcept = default;
-  ~element() override                    = default;
+  explicit element(Type type, std::string_view name, std::string_view data)
+      : m_type(type)
+      , m_name(name)
+      , m_data(data)
+  {
+  }
 
-  Type get_type() const { return m_type; }
-  std::string get_data() const { return m_data; }
-  const elementList& get_embeded() const { return m_embeded; }
-  const attributeList& get_attributes() const { return m_attributes; }
+  explicit element(Type type,
+                   std::string_view name,
+                   std::span<const element> children)
+      : m_type(type)
+      , m_name(name)
+      , m_children(children.begin(), children.end())
+  {
+  }
 
-  virtual bool get_state() const { return false; }
-  virtual const char* get_name() const = 0;
+  template<typename T>
+  friend class elementAtomic;
 
-  void set_data(const std::string& data) { m_data = data; }
-  void set_embedded(const elementList& embed) { m_embeded = embed; }
-  void set_attributes(const attributeList& attrs) { m_attributes = attrs; }
+  template<typename T>
+  friend class elementBoolean;
 
-  virtual void tgl_state() const {}
+  void render(std::ostream& out, std::size_t indent_value) const;
+
+public:
+  friend std::ostream& operator<<(std::ostream& out, const element& element)
+  {
+    element.render(out, 0);
+    return out;
+  }
 
   element& add(const element& elem);
   element& add(std::unique_ptr<element> elem);
 
   element& set(const std::string& name);
   element& set(const std::string& name, const std::string& value);
-
-  virtual std::unique_ptr<element> clone() const = 0;
-
-  void render(std::ostream& out) const override;
-
-private:
-  attributeList m_attributes;
-  elementList m_embeded;
-  std::string m_data;
-  Type m_type;
 };
+
+template<typename Tag>
+class HEMPLATE_EXPORT elementAtomic : public element
+{
+public:
+  explicit elementAtomic(std::string_view data)
+      : element(element::Type::Atomic, Tag::get_name(), data)
+  {
+  }
+
+  explicit elementAtomic(const std::derived_from<element> auto&... children)
+      : element(element::Type::Atomic, Tag::get_name(), children...)
+  {
+  }
+
+  explicit elementAtomic(std::span<const element> children)
+      : element(element::Type::Atomic, Tag::get_name(), children)
+  {
+  }
+};
+
+template<typename Tag>
+class HEMPLATE_EXPORT elementBoolean : public element
+{
+  static bool m_state;  // NOLINT
+
+public:
+  explicit elementBoolean(std::string_view data)
+      : element(element::Type::Boolean, Tag::get_name(), data)
+  {
+  }
+
+  explicit elementBoolean(const std::derived_from<element> auto&... children)
+      : element(element::Type::Boolean, Tag::get_name(), children...)
+  {
+  }
+
+  explicit elementBoolean(std::span<const element> children)
+      : element(element::Type::Boolean, Tag::get_name(), children)
+  {
+  }
+
+  bool get_state() const { return m_state; }
+  void tgl_state() const { m_state = !m_state; }
+};
+
+template<typename Tag>
+bool elementBoolean<Tag>::m_state = false;  // NOLINT
 
 }  // namespace hemplate

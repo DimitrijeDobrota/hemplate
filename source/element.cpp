@@ -1,7 +1,6 @@
-#include <memory>
+#include <format>
 #include <ostream>
 #include <string>
-#include <utility>
 
 #include "hemplate/element.hpp"
 
@@ -9,13 +8,7 @@ namespace hemplate {
 
 element& element::add(const element& elem)
 {
-  m_embeded.add(elem);
-  return *this;
-}
-
-element& element::add(std::unique_ptr<element> elem)
-{
-  m_embeded.add(std::move(elem));
+  m_children.emplace_back(elem);
   return *this;
 }
 
@@ -31,81 +24,58 @@ element& element::set(const std::string& name, const std::string& value)
   return *this;
 }
 
-void element::render(std::ostream& out) const
+void element::render(std::ostream& out, std::size_t indent_value) const
 {
-  if (*get_name() == '\0')
+  const std::string indent(indent_value, ' ');
+
+  if (m_name.empty())
   {
-    out << m_data;
+    out << indent << m_data << '\n';
     return;
   }
 
-  const auto open_tag = [this, &out](bool atomic)
-  {
-    out << '<' << get_name();
-    if (!m_attributes.empty()) out << ' ', m_attributes.render(out);
-    out << (atomic ? " />" : ">");
-  };
-
-  const auto close_tag = [this, &out]() { out << "</" << get_name() << '>'; };
-
   if (m_type == Type::Atomic)
   {
-    open_tag(true);
+    out << indent << std::format("<{} {}/>\n", m_name, m_attributes);
     return;
   }
 
   if (!m_data.empty())
   {
-    open_tag(false);
-    if (!m_embeded.empty()) m_embeded.render(out);
-    else out << m_data;
-    close_tag();
+    out << indent << std::format("<{} {}>\n", m_name, m_attributes);
+
+    if (!m_children.empty())
+    {
+      for (const auto& child : m_children)
+      {
+        child.render(out, indent_value + 2);
+      }
+    }
+    else
+    {
+      out << indent << "  " << m_data << '\n';
+    }
+
+    out << indent << std::format("</{}>\n", m_name);
     return;
   }
 
-  if (m_embeded.empty())
+  if (m_children.empty())
   {
-    tgl_state();
-    get_state() ? open_tag(false) : close_tag();
+    /*
+        tgl_state();
+        get_state() ? open_tag(false) : close_tag();
+    */
   }
   else
   {
-    open_tag(false);
-    m_embeded.render(out);
-    close_tag();
+    out << indent << std::format("<{} {}>\n", m_name, m_attributes);
+    for (const auto& child : m_children)
+    {
+      child.render(out, indent_value + 2);
+    }
+    out << indent << std::format("</{}>\n", m_name);
   }
-}
-
-elementList::elementList(const elementList& rhs)
-{
-  this->operator=(rhs);
-}
-
-elementList& elementList::operator=(const elementList& rhs)
-{
-  if (this == &rhs) return *this;
-
-  m_elems.clear();
-  for (const auto& elem : rhs.m_elems) add(*elem);
-
-  return *this;
-}
-
-elementList& elementList::add(const element& elem)
-{
-  m_elems.push_back(elem.clone());
-  return *this;
-}
-
-elementList& elementList::add(std::unique_ptr<element> elem)
-{
-  m_elems.push_back(std::move(elem));
-  return *this;
-}
-
-void elementList::render(std::ostream& out) const
-{
-  for (const auto& elem : m_elems) elem->render(out);
 }
 
 }  // namespace hemplate

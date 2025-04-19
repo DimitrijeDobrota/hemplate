@@ -1,6 +1,3 @@
-#include <initializer_list>
-#include <ostream>
-
 #include "hemplate/attribute.hpp"
 
 namespace hemplate {
@@ -15,25 +12,10 @@ attributeList::attributeList(attribute attr)  // NOLINT
   set(attr.get_name(), attr.get_value());
 }
 
-bool attribute::operator!=(const attribute& rhs) const
-{
-  return !(*this == rhs);
-}
-
-bool attribute::operator==(const attribute& rhs) const
-{
-  return m_name == rhs.m_name && m_value == rhs.m_value;
-}
-
 bool attributeList::empty() const
 {
   return m_attributes.empty() && m_class.get_value().empty()
       && m_style.get_value().empty();
-}
-
-void attribute::render(std::ostream& out) const
-{
-  out << get_name() << "=\"" << get_value() << "\"";
 }
 
 attributeList& attributeList::set(const std::string& name)
@@ -57,14 +39,6 @@ attributeList& attributeList::set(const std::string& name,
   else m_attributes.emplace_back(name, value);
 
   return *this;
-}
-
-void attributeList::render(std::ostream& out) const
-{
-  if (!m_class.get_value().empty()) out << m_class << ' ';
-  if (!m_style.get_value().empty()) out << m_style << ' ';
-
-  for (const auto& attr : m_attributes) out << attr << ' ';
 }
 
 }  // namespace hemplate
