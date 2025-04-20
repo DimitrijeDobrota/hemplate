@@ -41,4 +41,19 @@ attributeList& attributeList::set(const std::string& name,
   return *this;
 }
 
+attributeList attributeList::add(const std::string& name) const
+{
+  attributeList res = *this;
+  res.set(name);
+  return res;
+}
+
+attributeList attributeList::add(const std::string& name,
+                                 const std::string& value) const
+{
+  attributeList res = *this;
+  res.set(name, value);
+  return res;
+}
+
 }  // namespace hemplate

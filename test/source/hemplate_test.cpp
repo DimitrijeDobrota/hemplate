@@ -7,28 +7,28 @@ int main()
 {
   using namespace hemplate;  // NOLINT
 
-  const attributeList li_attrs({"class", "home_li"});
-  const attributeList ul_attrs({{"id", "main_ul"},
-                                {"class", "home_ul"},
-                                {"style", "margin-bottom: 1em"}});
+  const attributeList li_attrs {{"class", "home_li"}};
+  const attributeList ul_attrs {
+      {"id", "main_ul"},
+      {"class", "home_ul"},
+      {"style", "margin-bottom: 1em"},
+  };
 
-  // std::cout << comment("Hello this is a commen");
-  std::cout << html::html() << std::endl;
-  std::cout << html::ul("Won't see")
-                   .set("style", "margin-top: 1em")
-                   .set("class", "center")
-                   .add(html::li("Item 1").set("class", "item1"))
-                   .add(html::li("Item 2").set("class", "item2"))
-            << std::endl;
-  std::cout << html::meta() << std::endl;
-  std::cout << html::html() << std::endl;
-
-  /*
-    std::cout << comment();
-    std::cout << "split ";
-    std::cout << "comment ";
-    std::cout << comment() << std::endl;
-  */
+  std::cout << html::html {
+      comment("Hello this is a comment"),
+      html::ul {
+          ul_attrs,
+          html::li {
+              li_attrs.add("class", "item1"),
+              "Item 1",
+          },
+          html::li {
+              li_attrs.add("class", "item2"),
+              "Item 2",
+          },
+      },
+      html::meta(),
+  };
 
   return 0;
 }

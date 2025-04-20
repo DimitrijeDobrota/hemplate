@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -37,7 +36,7 @@ public:
   // NOLINTNEXTLINE *-explicit-constructor
   operator std::string() const
   {
-    return get_name() + "=\"" + get_value() + "\" ";
+    return get_name() + "=\"" + get_value() + "\"";
   }
 
 private:
@@ -55,6 +54,9 @@ public:
 
   attributeList& set(const std::string& name);
   attributeList& set(const std::string& name, const std::string& value);
+
+  attributeList add(const std::string& name) const;
+  attributeList add(const std::string& name, const std::string& value) const;
 
   bool empty() const;
 

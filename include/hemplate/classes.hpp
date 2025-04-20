@@ -29,173 +29,161 @@ struct tag
   static char const* get_name() { return Name.data(); }
 };
 
-/*
-class comment : public elementBoolean<tag<"">>
+using comment = elementBuilder<tag<"comment">, element::Type::Comment>;
+
+class xml : public elementBuilder<tag<"xml">, element::Type::Xml>
 {
 public:
-  comment() = default;
-  explicit comment(std::string text)
-      : elementBoolean(std::move(text))
-  {
-  }
+  static constexpr const auto default_version  = "1.0";
+  static constexpr const auto default_encoding = "UTF-8";
 
-  void render(std::ostream& out) const override
+  explicit xml(std::string version  = default_version,
+               std::string encoding = default_encoding)
+      : elementBuilder({{"version", std::move(version)},
+                        {"encoding", std::move(encoding)}})
   {
-    if (get_data().empty())
-    {
-      tgl_state();
-      out << (get_state() ? "<!-- " : " -->");
-    }
-    else out << "<!-- " << get_data() << " -->";
   }
 };
 
-class xml : public elementAtomic<tag<"xml">>
+using transparent =
+    elementBuilder<tag<"transparent">, element::Type::Transparent>;
+
+template<typename P, typename T>
+concept procedure = requires { requires(std::invocable<P, const T&>); };
+
+template<std::ranges::forward_range R>
+transparent transform(const R& range,
+                      procedure<std::ranges::range_value_t<R>> auto proc)
 {
-public:
-  explicit xml(std::string version = "1.0", std::string encoding = "UTF-8")
-      : m_version(std::move(version))
-      , m_encoding(std::move(encoding))
+  std::vector<element> res;
+
+  res.reserve(std::size(range));
+  for (const auto& elem : range)
   {
+    res.emplace_back(proc(elem));
   }
 
-  void render(std::ostream& out) const override
-  {
-    out << R"(<?xml version=")" << m_version << '"';
-    out << R"( encoding=")" << m_encoding << "\"?>";
-  }
-
-private:
-  std::string m_version;
-  std::string m_encoding;
-};
-*/
+  return transparent {res};
+}
 
 namespace html {
 
-/*
-class doctype : public elementAtomic<tag<"doctype">>
-{
-public:
-  explicit doctype() = default;
-
-  void render(std::ostream& out) const override { out << "<!DOCTYPE html>"; }
-};
-*/
-
-using a          = elementBoolean<tag<"a">>;
-using abbr       = elementBoolean<tag<"abbr">>;
-using address    = elementBoolean<tag<"address">>;
-using area       = elementAtomic<tag<"area">>;
-using article    = elementBoolean<tag<"article">>;
-using aside      = elementBoolean<tag<"aside">>;
-using audio      = elementBoolean<tag<"audio">>;
-using b          = elementBoolean<tag<"b">>;
-using base       = elementAtomic<tag<"base">>;
-using bdi        = elementBoolean<tag<"bdi">>;
-using bdo        = elementBoolean<tag<"bdo">>;
-using blockquote = elementBoolean<tag<"blockquote">>;
-using body       = elementBoolean<tag<"body">>;
-using br         = elementAtomic<tag<"br">>;
-using button     = elementBoolean<tag<"button">>;
-using canvas     = elementBoolean<tag<"canvas">>;
-using caption    = elementBoolean<tag<"caption">>;
-using cite       = elementBoolean<tag<"cite">>;
-using code       = elementBoolean<tag<"code">>;
-using col        = elementAtomic<tag<"col">>;
-using colgroup   = elementBoolean<tag<"colgroup">>;
-using data       = elementBoolean<tag<"data">>;
-using datalist   = elementBoolean<tag<"datalist">>;
-using dd         = elementBoolean<tag<"dd">>;
-using del        = elementBoolean<tag<"del">>;
-using details    = elementBoolean<tag<"details">>;
-using dfn        = elementBoolean<tag<"dfn">>;
-using dialog     = elementBoolean<tag<"dialog">>;
-using div        = elementBoolean<tag<"div">>;
-using dl         = elementBoolean<tag<"dl">>;
-using dt         = elementBoolean<tag<"dt">>;
-using em         = elementBoolean<tag<"em">>;
-using embed      = elementAtomic<tag<"embed">>;
-using fieldset   = elementBoolean<tag<"fieldset">>;
-using figcaption = elementBoolean<tag<"figcaption">>;
-using figure     = elementBoolean<tag<"figure">>;
-using footer     = elementBoolean<tag<"footer">>;
-using form       = elementBoolean<tag<"form">>;
-using h1         = elementBoolean<tag<"h1">>;
-using h2         = elementBoolean<tag<"h2">>;
-using h3         = elementBoolean<tag<"h3">>;
-using h4         = elementBoolean<tag<"h4">>;
-using h5         = elementBoolean<tag<"h5">>;
-using h6         = elementBoolean<tag<"h6">>;
-using head       = elementBoolean<tag<"head">>;
-using header     = elementBoolean<tag<"header">>;
-using hgroup     = elementBoolean<tag<"hgroup">>;
-using hr         = elementAtomic<tag<"hr">>;
-using html       = elementBoolean<tag<"html">>;
-using i          = elementBoolean<tag<"i">>;
-using iframe     = elementBoolean<tag<"iframe">>;
-using img        = elementAtomic<tag<"img">>;
-using input      = elementAtomic<tag<"input">>;
-using ins        = elementBoolean<tag<"ins">>;
-using kbd        = elementBoolean<tag<"kbd">>;
-using label      = elementBoolean<tag<"label">>;
-using legend     = elementBoolean<tag<"legend">>;
-using li         = elementBoolean<tag<"li">>;
-using link       = elementAtomic<tag<"link">>;
-using main       = elementBoolean<tag<"main">>;
-using map        = elementBoolean<tag<"map">>;
-using mark       = elementBoolean<tag<"mark">>;
-using menu       = elementBoolean<tag<"menu">>;
-using meta       = elementAtomic<tag<"meta">>;
-using meter      = elementBoolean<tag<"meter">>;
-using nav        = elementBoolean<tag<"nav">>;
-using noscript   = elementBoolean<tag<"noscript">>;
-using object     = elementBoolean<tag<"object">>;
-using ol         = elementBoolean<tag<"ol">>;
-using optgroup   = elementBoolean<tag<"optgroup">>;
-using option     = elementBoolean<tag<"option">>;
-using output     = elementBoolean<tag<"output">>;
-using p          = elementBoolean<tag<"p">>;
-using param      = elementAtomic<tag<"param">>;
-using picture    = elementBoolean<tag<"picture">>;
-using pre        = elementBoolean<tag<"pre">>;
-using progress   = elementBoolean<tag<"progress">>;
-using q          = elementBoolean<tag<"q">>;
-using rp         = elementBoolean<tag<"rp">>;
-using rt         = elementBoolean<tag<"rt">>;
-using ruby       = elementBoolean<tag<"ruby">>;
-using s          = elementBoolean<tag<"s">>;
-using samp       = elementBoolean<tag<"samp">>;
-using script     = elementBoolean<tag<"script">>;
-using search     = elementBoolean<tag<"search">>;
-using section    = elementBoolean<tag<"section">>;
-using select     = elementBoolean<tag<"select">>;
-using small      = elementBoolean<tag<"small">>;
-using source     = elementAtomic<tag<"source">>;
-using span       = elementBoolean<tag<"span">>;
-using strong     = elementBoolean<tag<"strong">>;
-using style      = elementBoolean<tag<"style">>;
-using sub        = elementBoolean<tag<"sub">>;
-using summary    = elementBoolean<tag<"summary">>;
-using sup        = elementBoolean<tag<"sup">>;
-using svg        = elementBoolean<tag<"svg">>;
-using table      = elementBoolean<tag<"table">>;
-using tbody      = elementBoolean<tag<"tbody">>;
-using td         = elementBoolean<tag<"td">>;
-using textarea   = elementBoolean<tag<"textarea">>;
-using text       = elementBoolean<tag<"">>;
-using tfoot      = elementBoolean<tag<"tfoot">>;
-using th         = elementBoolean<tag<"th">>;
-using thead      = elementBoolean<tag<"thead">>;
-using time       = elementBoolean<tag<"time">>;
-using title      = elementBoolean<tag<"title">>;
-using tr         = elementBoolean<tag<"tr">>;
-using track      = elementAtomic<tag<"track">>;
-using u          = elementBoolean<tag<"u">>;
-using ul         = elementBoolean<tag<"ul">>;
-using var        = elementBoolean<tag<"var">>;
-using video      = elementBoolean<tag<"video">>;
-using wbr        = elementAtomic<tag<"wbr">>;
+// clang-format off
+using abbr       = elementBuilder<tag<"abbr">, element::Type::Boolean>;
+using address    = elementBuilder<tag<"address">, element::Type::Boolean>;
+using a          = elementBuilder<tag<"a">, element::Type::Boolean>;
+using area       = elementBuilder<tag<"area">, element::Type::Atomic>;
+using article    = elementBuilder<tag<"article">, element::Type::Boolean>;
+using aside      = elementBuilder<tag<"aside">, element::Type::Boolean>;
+using audio      = elementBuilder<tag<"audio">, element::Type::Boolean>;
+using base       = elementBuilder<tag<"base">, element::Type::Atomic>;
+using bdi        = elementBuilder<tag<"bdi">, element::Type::Boolean>;
+using bdo        = elementBuilder<tag<"bdo">, element::Type::Boolean>;
+using b          = elementBuilder<tag<"b">, element::Type::Boolean>;
+using blockquote = elementBuilder<tag<"blockquote">, element::Type::Boolean>;
+using body       = elementBuilder<tag<"body">, element::Type::Boolean>;
+using br         = elementBuilder<tag<"br">, element::Type::Atomic>;
+using button     = elementBuilder<tag<"button">, element::Type::Boolean>;
+using canvas     = elementBuilder<tag<"canvas">, element::Type::Boolean>;
+using caption    = elementBuilder<tag<"caption">, element::Type::Boolean>;
+using cite       = elementBuilder<tag<"cite">, element::Type::Boolean>;
+using code       = elementBuilder<tag<"code">, element::Type::Boolean>;
+using col        = elementBuilder<tag<"col">, element::Type::Atomic>;
+using colgroup   = elementBuilder<tag<"colgroup">, element::Type::Boolean>;
+using data       = elementBuilder<tag<"data">, element::Type::Boolean>;
+using datalist   = elementBuilder<tag<"datalist">, element::Type::Boolean>;
+using dd         = elementBuilder<tag<"dd">, element::Type::Boolean>;
+using del        = elementBuilder<tag<"del">, element::Type::Boolean>;
+using details    = elementBuilder<tag<"details">, element::Type::Boolean>;
+using dfn        = elementBuilder<tag<"dfn">, element::Type::Boolean>;
+using dialog     = elementBuilder<tag<"dialog">, element::Type::Boolean>;
+using div        = elementBuilder<tag<"div">, element::Type::Boolean>;
+using dl         = elementBuilder<tag<"dl">, element::Type::Boolean>;
+using doctype    = elementBuilder<tag<"!DOCTYPE html">, element::Type::Atomic>;
+using dt         = elementBuilder<tag<"dt">, element::Type::Boolean>;
+using embed      = elementBuilder<tag<"embed">, element::Type::Atomic>;
+using em         = elementBuilder<tag<"em">, element::Type::Boolean>;
+using fieldset   = elementBuilder<tag<"fieldset">, element::Type::Boolean>;
+using figcaption = elementBuilder<tag<"figcaption">, element::Type::Boolean>;
+using figure     = elementBuilder<tag<"figure">, element::Type::Boolean>;
+using footer     = elementBuilder<tag<"footer">, element::Type::Boolean>;
+using form       = elementBuilder<tag<"form">, element::Type::Boolean>;
+using h1         = elementBuilder<tag<"h1">, element::Type::Boolean>;
+using h2         = elementBuilder<tag<"h2">, element::Type::Boolean>;
+using h3         = elementBuilder<tag<"h3">, element::Type::Boolean>;
+using h4         = elementBuilder<tag<"h4">, element::Type::Boolean>;
+using h5         = elementBuilder<tag<"h5">, element::Type::Boolean>;
+using h6         = elementBuilder<tag<"h6">, element::Type::Boolean>;
+using head       = elementBuilder<tag<"head">, element::Type::Boolean>;
+using header     = elementBuilder<tag<"header">, element::Type::Boolean>;
+using hgroup     = elementBuilder<tag<"hgroup">, element::Type::Boolean>;
+using hr         = elementBuilder<tag<"hr">, element::Type::Atomic>;
+using html       = elementBuilder<tag<"html">, element::Type::Boolean>;
+using i          = elementBuilder<tag<"i">, element::Type::Boolean>;
+using iframe     = elementBuilder<tag<"iframe">, element::Type::Boolean>;
+using img        = elementBuilder<tag<"img">, element::Type::Atomic>;
+using input      = elementBuilder<tag<"input">, element::Type::Atomic>;
+using ins        = elementBuilder<tag<"ins">, element::Type::Boolean>;
+using kbd        = elementBuilder<tag<"kbd">, element::Type::Boolean>;
+using label      = elementBuilder<tag<"label">, element::Type::Boolean>;
+using legend     = elementBuilder<tag<"legend">, element::Type::Boolean>;
+using li         = elementBuilder<tag<"li">, element::Type::Boolean>;
+using link       = elementBuilder<tag<"link">, element::Type::Atomic>;
+using main       = elementBuilder<tag<"main">, element::Type::Boolean>;
+using map        = elementBuilder<tag<"map">, element::Type::Boolean>;
+using mark       = elementBuilder<tag<"mark">, element::Type::Boolean>;
+using menu       = elementBuilder<tag<"menu">, element::Type::Boolean>;
+using meta       = elementBuilder<tag<"meta">, element::Type::Atomic>;
+using meter      = elementBuilder<tag<"meter">, element::Type::Boolean>;
+using nav        = elementBuilder<tag<"nav">, element::Type::Boolean>;
+using noscript   = elementBuilder<tag<"noscript">, element::Type::Boolean>;
+using object     = elementBuilder<tag<"object">, element::Type::Boolean>;
+using ol         = elementBuilder<tag<"ol">, element::Type::Boolean>;
+using optgroup   = elementBuilder<tag<"optgroup">, element::Type::Boolean>;
+using option     = elementBuilder<tag<"option">, element::Type::Boolean>;
+using output     = elementBuilder<tag<"output">, element::Type::Boolean>;
+using p          = elementBuilder<tag<"p">, element::Type::Boolean>;
+using param      = elementBuilder<tag<"param">, element::Type::Atomic>;
+using picture    = elementBuilder<tag<"picture">, element::Type::Boolean>;
+using pre        = elementBuilder<tag<"pre">, element::Type::Boolean>;
+using progress   = elementBuilder<tag<"progress">, element::Type::Boolean>;
+using q          = elementBuilder<tag<"q">, element::Type::Boolean>;
+using rp         = elementBuilder<tag<"rp">, element::Type::Boolean>;
+using rt         = elementBuilder<tag<"rt">, element::Type::Boolean>;
+using ruby       = elementBuilder<tag<"ruby">, element::Type::Boolean>;
+using s          = elementBuilder<tag<"s">, element::Type::Boolean>;
+using samp       = elementBuilder<tag<"samp">, element::Type::Boolean>;
+using script     = elementBuilder<tag<"script">, element::Type::Boolean>;
+using search     = elementBuilder<tag<"search">, element::Type::Boolean>;
+using section    = elementBuilder<tag<"section">, element::Type::Boolean>;
+using select     = elementBuilder<tag<"select">, element::Type::Boolean>;
+using small      = elementBuilder<tag<"small">, element::Type::Boolean>;
+using source     = elementBuilder<tag<"source">, element::Type::Atomic>;
+using span       = elementBuilder<tag<"span">, element::Type::Boolean>;
+using strong     = elementBuilder<tag<"strong">, element::Type::Boolean>;
+using style      = elementBuilder<tag<"style">, element::Type::Boolean>;
+using sub        = elementBuilder<tag<"sub">, element::Type::Boolean>;
+using summary    = elementBuilder<tag<"summary">, element::Type::Boolean>;
+using sup        = elementBuilder<tag<"sup">, element::Type::Boolean>;
+using svg        = elementBuilder<tag<"svg">, element::Type::Boolean>;
+using table      = elementBuilder<tag<"table">, element::Type::Boolean>;
+using tbody      = elementBuilder<tag<"tbody">, element::Type::Boolean>;
+using td         = elementBuilder<tag<"td">, element::Type::Boolean>;
+using textarea   = elementBuilder<tag<"textarea">, element::Type::Boolean>;
+using text       = elementBuilder<tag<"">, element::Type::Boolean>;
+using tfoot      = elementBuilder<tag<"tfoot">, element::Type::Boolean>;
+using th         = elementBuilder<tag<"th">, element::Type::Boolean>;
+using thead      = elementBuilder<tag<"thead">, element::Type::Boolean>;
+using time       = elementBuilder<tag<"time">, element::Type::Boolean>;
+using title      = elementBuilder<tag<"title">, element::Type::Boolean>;
+using tr         = elementBuilder<tag<"tr">, element::Type::Boolean>;
+using track      = elementBuilder<tag<"track">, element::Type::Atomic>;
+using u          = elementBuilder<tag<"u">, element::Type::Boolean>;
+using ul         = elementBuilder<tag<"ul">, element::Type::Boolean>;
+using var        = elementBuilder<tag<"var">, element::Type::Boolean>;
+using video      = elementBuilder<tag<"video">, element::Type::Boolean>;
+using wbr        = elementBuilder<tag<"wbr">, element::Type::Atomic>;
+// clang-format on
 
 }  // namespace html
 
@@ -204,61 +192,108 @@ namespace rss {
 std::string format_time(std::int64_t sec);
 std::string format_time_now();
 
-/*
-class rss : public elementBoolean<tag<"rss">>
+class rss : public elementBuilder<tag<"rss">, element::Type::Boolean>
 {
 public:
-  explicit rss(std::string version = "2.0",
-               std::string xmlns   = "http://www.w3.org/2005/Atom")
-      : elementBoolean(attributeList({{"version", std::move(version)},
-                                      {"xmlns:atom", std::move(xmlns)}}))
+  static constexpr const auto default_version = "2.0";
+  static constexpr const auto default_xmlns   = "http://www.w3.org/2005/Atom";
+
+  explicit rss(std::string version,
+               std::string xmlns,
+               const std::derived_from<element> auto&... children)
+      : elementBuilder({{"version", std::move(version)},
+                        {"xmlns:atom", std::move(xmlns)}},
+                       children...)
+  {
+  }
+
+  explicit rss(std::string version,
+               std::string xmlns,
+               std::span<const element> children)
+      : elementBuilder({{"version", std::move(version)},
+                        {"xmlns:atom", std::move(xmlns)}},
+                       children)
+  {
+  }
+
+  explicit rss(const std::derived_from<element> auto&... children)
+      : rss(default_version, default_xmlns, children...)
+  {
+  }
+
+  explicit rss(std::span<const element> children)
+      : rss(default_version, default_xmlns, children)
   {
   }
 };
 
-class atomLink : public elementAtomic<tag<"atom:link">>
+class atomLink
+    : public elementBuilder<tag<"atom:link">, element::Type::Boolean>
 {
 public:
-  explicit atomLink(std::string rel  = "self",
-                    std::string type = "application/rss+xml")
-      : elementAtomic(attributeList(
-            {{"rel", std::move(rel)}, {"type", std::move(type)}}))
+  static constexpr const auto default_rel  = "self";
+  static constexpr const auto default_type = "application/rss+xml";
+
+  explicit atomLink(std::string rel,
+                    std::string type,
+                    const std::derived_from<element> auto&... children)
+      : elementBuilder({{"rel", std::move(rel)}, {"type", std::move(type)}},
+                       children...)
+  {
+  }
+
+  explicit atomLink(std::string rel,
+                    std::string type,
+                    std::span<const element> children)
+      : elementBuilder({{"rel", std::move(rel)}, {"type", std::move(type)}},
+                       children)
+  {
+  }
+
+  explicit atomLink(const std::derived_from<element> auto&... children)
+      : atomLink(default_rel, default_type, children...)
+  {
+  }
+
+  explicit atomLink(std::span<const element> children)
+      : atomLink(default_rel, default_type, children)
   {
   }
 };
-*/
 
-using author         = elementBoolean<tag<"author">>;
-using category       = elementBoolean<tag<"category">>;
-using channel        = elementBoolean<tag<"channel">>;
-using cloud          = elementAtomic<tag<"cloud">>;
-using comments       = elementBoolean<tag<"comments">>;
-using copyright      = elementBoolean<tag<"copyright">>;
-using description    = elementBoolean<tag<"description">>;
-using docs           = elementBoolean<tag<"docs">>;
-using enclosure      = elementAtomic<tag<"enclosure">>;
-using generator      = elementBoolean<tag<"generator">>;
-using guid           = elementBoolean<tag<"guid">>;
-using height         = elementBoolean<tag<"height">>;
-using image          = elementBoolean<tag<"image">>;
-using item           = elementBoolean<tag<"item">>;
-using language       = elementBoolean<tag<"language">>;
-using lastBuildDate  = elementBoolean<tag<"lastBuildDate">>;
-using link           = elementBoolean<tag<"link">>;
-using managingEditor = elementBoolean<tag<"managingEditor">>;
-using name           = elementBoolean<tag<"name">>;
-using pubDate        = elementBoolean<tag<"pubDate">>;
-using rating         = elementBoolean<tag<"rating">>;
-using skipDays       = elementBoolean<tag<"skipDays">>;
-using skipHours      = elementBoolean<tag<"skipHours">>;
-using source         = elementBoolean<tag<"source">>;
-using text           = elementBoolean<tag<"">>;
-using textinput      = elementBoolean<tag<"textinput">>;
-using title          = elementBoolean<tag<"title">>;
-using ttl            = elementBoolean<tag<"ttl">>;
-using url            = elementBoolean<tag<"url">>;
-using webMaster      = elementBoolean<tag<"webMaster">>;
-using width          = elementBoolean<tag<"width">>;
+// clang-format off
+using author         = elementBuilder<tag<"author">, element::Type::Boolean>;
+using category       = elementBuilder<tag<"category">, element::Type::Boolean>;
+using channel        = elementBuilder<tag<"channel">, element::Type::Boolean>;
+using cloud          = elementBuilder<tag<"cloud">, element::Type::Atomic>;
+using comments       = elementBuilder<tag<"comments">, element::Type::Boolean>;
+using copyright      = elementBuilder<tag<"copyright">, element::Type::Boolean>;
+using description    = elementBuilder<tag<"description">, element::Type::Boolean>;
+using docs           = elementBuilder<tag<"docs">, element::Type::Boolean>;
+using enclosure      = elementBuilder<tag<"enclosure">, element::Type::Atomic>;
+using generator      = elementBuilder<tag<"generator">, element::Type::Boolean>;
+using guid           = elementBuilder<tag<"guid">, element::Type::Boolean>;
+using height         = elementBuilder<tag<"height">, element::Type::Boolean>;
+using image          = elementBuilder<tag<"image">, element::Type::Boolean>;
+using item           = elementBuilder<tag<"item">, element::Type::Boolean>;
+using language       = elementBuilder<tag<"language">, element::Type::Boolean>;
+using lastBuildDate  = elementBuilder<tag<"lastBuildDate">, element::Type::Boolean>;
+using link           = elementBuilder<tag<"link">, element::Type::Boolean>;
+using managingEditor = elementBuilder<tag<"managingEditor">, element::Type::Boolean>;
+using name           = elementBuilder<tag<"name">, element::Type::Boolean>;
+using pubDate        = elementBuilder<tag<"pubDate">, element::Type::Boolean>;
+using rating         = elementBuilder<tag<"rating">, element::Type::Boolean>;
+using skipDays       = elementBuilder<tag<"skipDays">, element::Type::Boolean>;
+using skipHours      = elementBuilder<tag<"skipHours">, element::Type::Boolean>;
+using source         = elementBuilder<tag<"source">, element::Type::Boolean>;
+using text           = elementBuilder<tag<"">, element::Type::Boolean>;
+using textinput      = elementBuilder<tag<"textinput">, element::Type::Boolean>;
+using title          = elementBuilder<tag<"title">, element::Type::Boolean>;
+using ttl            = elementBuilder<tag<"ttl">, element::Type::Boolean>;
+using url            = elementBuilder<tag<"url">, element::Type::Boolean>;
+using webMaster      = elementBuilder<tag<"webMaster">, element::Type::Boolean>;
+using width          = elementBuilder<tag<"width">, element::Type::Boolean>;
+// clang-format on
 
 }  // namespace rss
 
@@ -267,65 +302,101 @@ namespace atom {
 std::string format_time(std::int64_t sec);
 std::string format_time_now();
 
-/*
-class feed : public elementBoolean<tag<"feed">>
+class feed : public elementBuilder<tag<"feed">, element::Type::Boolean>
 {
 public:
-  explicit feed(std::string xmlns = "http://www.w3.org/2005/Atom")
-      : elementBoolean(attributeList({{"xmlns", std::move(xmlns)}}))
+  static constexpr const auto default_xmlns = "http://www.w3.org/2005/Atom";
+
+  explicit feed(std::string xmlns,
+                const std::derived_from<element> auto&... children)
+      : elementBuilder({{"xmlns", std::move(xmlns)}}, children...)
+  {
+  }
+
+  explicit feed(std::string xmlns, std::span<const element> children)
+      : elementBuilder({{"xmlns", std::move(xmlns)}}, children)
+  {
+  }
+
+  explicit feed(const std::derived_from<element> auto&... children)
+      : feed(default_xmlns, children...)
+  {
+  }
+
+  explicit feed(std::span<const element> children)
+      : feed(default_xmlns, children)
   {
   }
 };
-*/
 
-using author        = elementBoolean<tag<"author">>;
-using category      = elementBoolean<tag<"category">>;
-using content       = elementBoolean<tag<"content">>;
-using contributor   = elementBoolean<tag<"contributor">>;
-using div           = elementBoolean<tag<"div">>;
-using email         = elementBoolean<tag<"email">>;
-using entry         = elementBoolean<tag<"entry">>;
-using generator     = elementBoolean<tag<"generator">>;
-using icon          = elementBoolean<tag<"icon">>;
-using id            = elementBoolean<tag<"id">>;
-using intervalBlock = elementBoolean<tag<"intervalBlock">>;
-using link          = elementBoolean<tag<"link">>;
-using logo          = elementBoolean<tag<"logo">>;
-using meterReading  = elementBoolean<tag<"meterReading">>;
-using name          = elementBoolean<tag<"name">>;
-using published     = elementBoolean<tag<"published">>;
-using readingType   = elementBoolean<tag<"readingType">>;
-using rights        = elementBoolean<tag<"rights">>;
-using source        = elementBoolean<tag<"source">>;
-using subtitle      = elementBoolean<tag<"subtitle">>;
-using summary       = elementBoolean<tag<"summary">>;
-using text          = elementBoolean<tag<"">>;
-using title         = elementBoolean<tag<"title">>;
-using updated       = elementBoolean<tag<"updated">>;
-using uri           = elementBoolean<tag<"uri">>;
-using usagePoint    = elementBoolean<tag<"usagePoint">>;
+// clang-format off
+using author        = elementBuilder<tag<"author">, element::Type::Boolean>;
+using category      = elementBuilder<tag<"category">, element::Type::Boolean>;
+using content       = elementBuilder<tag<"content">, element::Type::Boolean>;
+using contributor   = elementBuilder<tag<"contributor">, element::Type::Boolean>;
+using div           = elementBuilder<tag<"div">, element::Type::Boolean>;
+using email         = elementBuilder<tag<"email">, element::Type::Boolean>;
+using entry         = elementBuilder<tag<"entry">, element::Type::Boolean>;
+using generator     = elementBuilder<tag<"generator">, element::Type::Boolean>;
+using icon          = elementBuilder<tag<"icon">, element::Type::Boolean>;
+using id            = elementBuilder<tag<"id">, element::Type::Boolean>;
+using intervalBlock = elementBuilder<tag<"intervalBlock">, element::Type::Boolean>;
+using link          = elementBuilder<tag<"link">, element::Type::Boolean>;
+using logo          = elementBuilder<tag<"logo">, element::Type::Boolean>;
+using meterReading  = elementBuilder<tag<"meterReading">, element::Type::Boolean>;
+using name          = elementBuilder<tag<"name">, element::Type::Boolean>;
+using published     = elementBuilder<tag<"published">, element::Type::Boolean>;
+using readingType   = elementBuilder<tag<"readingType">, element::Type::Boolean>;
+using rights        = elementBuilder<tag<"rights">, element::Type::Boolean>;
+using source        = elementBuilder<tag<"source">, element::Type::Boolean>;
+using subtitle      = elementBuilder<tag<"subtitle">, element::Type::Boolean>;
+using summary       = elementBuilder<tag<"summary">, element::Type::Boolean>;
+using text          = elementBuilder<tag<"">, element::Type::Boolean>;
+using title         = elementBuilder<tag<"title">, element::Type::Boolean>;
+using updated       = elementBuilder<tag<"updated">, element::Type::Boolean>;
+using uri           = elementBuilder<tag<"uri">, element::Type::Boolean>;
+using usagePoint    = elementBuilder<tag<"usagePoint">, element::Type::Boolean>;
+// clang-format on
 
 }  // namespace atom
 
 namespace sitemap {
 
-/*
-class urlset : public elementBoolean<tag<"urlset">>
+class urlset : public elementBuilder<tag<"urlset">, element::Type::Boolean>
 {
 public:
-  explicit urlset(
-      std::string xmlns = "http://www.sitemaps.org/schemas/sitemap/0.9")
-      : elementBoolean(attributeList({"xmlns", std::move(xmlns)}))
+  static constexpr const auto default_xmlns =
+      "http://www.sitemaps.org/schemas/sitemap/0.9";
+
+  explicit urlset(std::string xmlns,
+                  const std::derived_from<element> auto&... children)
+      : elementBuilder({{"xmlns", std::move(xmlns)}}, children...)
+  {
+  }
+
+  explicit urlset(std::string xmlns, std::span<const element> children)
+      : elementBuilder({{"xmlns", std::move(xmlns)}}, children)
+  {
+  }
+
+  explicit urlset(const std::derived_from<element> auto&... children)
+      : urlset(default_xmlns, children...)
+  {
+  }
+
+  explicit urlset(std::span<const element> children)
+      : urlset(default_xmlns, children)
   {
   }
 };
-*/
 
-using changefreq = elementBoolean<tag<"changefreq">>;
-using lastmod    = elementBoolean<tag<"lastmod">>;
-using loc        = elementBoolean<tag<"loc">>;
-using url        = elementBoolean<tag<"url">>;
-using priority   = elementBoolean<tag<"priority">>;
+// clang-format off
+using changefreq = elementBuilder<tag<"changefreq">, element::Type::Boolean>;
+using lastmod    = elementBuilder<tag<"lastmod">, element::Type::Boolean>;
+using loc        = elementBuilder<tag<"loc">, element::Type::Boolean>;
+using url        = elementBuilder<tag<"url">, element::Type::Boolean>;
+using priority   = elementBuilder<tag<"priority">, element::Type::Boolean>;
+// clang-format on
 
 }  // namespace sitemap
 

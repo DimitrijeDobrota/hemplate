@@ -24,19 +24,60 @@ element& element::set(const std::string& name, const std::string& value)
   return *this;
 }
 
+void element::render_comment(std::ostream& out, std::size_t indent_value) const
+{
+  const std::string indent(indent_value, ' ');
+
+  out << indent << "<!-- " << m_data << " -->\n";
+}
+
+void element::render_atomic(std::ostream& out, std::size_t indent_value) const
+{
+  const std::string indent(indent_value, ' ');
+
+  out << indent << std::format("<{} {}/>\n", m_name, m_attributes);
+}
+
+void element::render_xml(std::ostream& out, std::size_t indent_value) const
+{
+  const std::string indent(indent_value, ' ');
+  out << indent << std::format("<?xml {}?>\n", m_attributes);
+}
+
+void element::render_children(std::ostream& out,
+                              std::size_t indent_value) const
+{
+  for (const auto& child : m_children)
+  {
+    child.render(out, indent_value);
+  }
+}
+
 void element::render(std::ostream& out, std::size_t indent_value) const
 {
   const std::string indent(indent_value, ' ');
 
+  switch (m_type)
+  {
+    case Type::Atomic:
+      render_atomic(out, indent_value);
+      return;
+    case Type::Comment:
+      render_comment(out, indent_value);
+      return;
+    case Type::Xml:
+      render_xml(out, indent_value);
+      return;
+    case Type::Transparent:
+      render_children(out, indent_value);
+      return;
+    default:
+      break;
+  }
+
   if (m_name.empty())
   {
     out << indent << m_data << '\n';
-    return;
-  }
-
-  if (m_type == Type::Atomic)
-  {
-    out << indent << std::format("<{} {}/>\n", m_name, m_attributes);
     return;
   }
 
@@ -46,10 +87,7 @@ void element::render(std::ostream& out, std::size_t indent_value) const
 
     if (!m_children.empty())
     {
-      for (const auto& child : m_children)
-      {
-        child.render(out, indent_value + 2);
-      }
+      render_children(out, indent_value + 2);
     }
     else
     {
@@ -62,18 +100,19 @@ void element::render(std::ostream& out, std::size_t indent_value) const
 
   if (m_children.empty())
   {
-    /*
-        tgl_state();
-        get_state() ? open_tag(false) : close_tag();
-    */
+    if (tgl_state())
+    {
+      out << indent << std::format("<{} {}>\n", m_name, m_attributes);
+    }
+    else
+    {
+      out << indent << std::format("</{}>\n", m_name);
+    }
   }
   else
   {
     out << indent << std::format("<{} {}>\n", m_name, m_attributes);
-    for (const auto& child : m_children)
-    {
-      child.render(out, indent_value + 2);
-    }
+    render_children(out, indent_value + 2);
     out << indent << std::format("</{}>\n", m_name);
   }
 }
