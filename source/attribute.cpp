@@ -18,11 +18,24 @@ bool attributeList::empty() const
       && m_style.get_value().empty();
 }
 
+attributeList& attributeList::set(const attributeList& list)
+{
+  for (const auto& attr : list.m_attributes)
+  {
+    set(attr.get_name(), attr.get_value());
+  }
+  set("class", list.m_class);
+  set("style", list.m_style);
+
+  return (*this);
+}
+
 attributeList& attributeList::set(const std::string& name)
 {
   if (name != "class" && name != "style") m_attributes.emplace_back(name);
   return *this;
 }
+
 attributeList& attributeList::set(const std::string& name,
                                   const std::string& value)
 {
@@ -39,6 +52,13 @@ attributeList& attributeList::set(const std::string& name,
   else m_attributes.emplace_back(name, value);
 
   return *this;
+}
+
+attributeList attributeList::add(const attributeList& list) const
+{
+  attributeList res = *this;
+  res.set(list);
+  return res;
 }
 
 attributeList attributeList::add(const std::string& name) const

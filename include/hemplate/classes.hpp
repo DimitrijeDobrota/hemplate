@@ -68,6 +68,12 @@ transparent transform(const R& range,
 
 namespace html {
 
+using hemplate::comment;
+using hemplate::element;
+using hemplate::transform;
+using hemplate::transparent;
+using hemplate::xml;
+
 // clang-format off
 using abbr       = elementBuilder<tag<"abbr">, element::Type::Boolean>;
 using address    = elementBuilder<tag<"address">, element::Type::Boolean>;
@@ -236,30 +242,52 @@ public:
 
   explicit atomLink(std::string rel,
                     std::string type,
+                    const attributeList& attributes,
                     const std::derived_from<element> auto&... children)
-      : elementBuilder({{"rel", std::move(rel)}, {"type", std::move(type)}},
+      : elementBuilder(attributes.add({{"rel", std::move(rel)},
+                                       {"type", std::move(type)}}),
                        children...)
   {
   }
 
   explicit atomLink(std::string rel,
                     std::string type,
+                    const attributeList& attributes,
                     std::span<const element> children)
-      : elementBuilder({{"rel", std::move(rel)}, {"type", std::move(type)}},
+      : elementBuilder(attributes.add({{"rel", std::move(rel)},
+                                       {"type", std::move(type)}}),
                        children)
   {
   }
 
   explicit atomLink(const std::derived_from<element> auto&... children)
-      : atomLink(default_rel, default_type, children...)
+      : atomLink(default_rel, default_type, {}, children...)
   {
   }
 
   explicit atomLink(std::span<const element> children)
-      : atomLink(default_rel, default_type, children)
+      : atomLink(default_rel, default_type, {}, children)
+  {
+  }
+
+  explicit atomLink(const attributeList& attributes,
+                    const std::derived_from<element> auto&... children)
+      : atomLink(default_rel, default_type, attributes, children...)
+  {
+  }
+
+  explicit atomLink(const attributeList& attributes,
+                    std::span<const element> children)
+      : atomLink(default_rel, default_type, attributes, children)
   {
   }
 };
+
+using hemplate::comment;
+using hemplate::element;
+using hemplate::transform;
+using hemplate::transparent;
+using hemplate::xml;
 
 // clang-format off
 using author         = elementBuilder<tag<"author">, element::Type::Boolean>;
@@ -328,6 +356,12 @@ public:
   {
   }
 };
+
+using hemplate::comment;
+using hemplate::element;
+using hemplate::transform;
+using hemplate::transparent;
+using hemplate::xml;
 
 // clang-format off
 using author        = elementBuilder<tag<"author">, element::Type::Boolean>;

@@ -52,9 +52,11 @@ public:
   attributeList(std::initializer_list<attribute> list);
   attributeList(attribute attr);  // NOLINT
 
+  attributeList& set(const attributeList& list);
   attributeList& set(const std::string& name);
   attributeList& set(const std::string& name, const std::string& value);
 
+  attributeList add(const attributeList& list) const;
   attributeList add(const std::string& name) const;
   attributeList add(const std::string& name, const std::string& value) const;
 
