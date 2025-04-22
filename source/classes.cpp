@@ -3,7 +3,8 @@
 #include <format>
 #include <string>
 
-#include "hemplate/classes.hpp"
+#include "hemplate/atom.hpp"
+#include "hemplate/rss.hpp"
 
 namespace {
 
