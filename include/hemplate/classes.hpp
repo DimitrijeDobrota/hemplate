@@ -11,17 +11,10 @@
 namespace hemplate
 {
 
-template<based::string_literal Name>
-struct tag
-{
-  static auto get_name() { return Name.data(); }
-  static auto get_size() { return Name.size(); }
-};
+using comment = element_builder<"comment", element::Type::Comment>;
+using transparent = element_builder<"transparent", element::Type::Transparent>;
 
-using comment = element_builder<tag<"comment">, element::Type::Comment>;
-
-class HEMPLATE_EXPORT xml
-    : public element_builder<tag<"xml">, element::Type::Xml>
+class HEMPLATE_EXPORT xml : public element_builder<"xml", element::Type::Xml>
 {
 public:
   static constexpr const auto default_version = "1.0";
@@ -34,9 +27,6 @@ public:
   {
   }
 };
-
-using transparent =
-    element_builder<tag<"transparent">, element::Type::Transparent>;
 
 template<std::ranges::forward_range R>
 transparent transform(const R& range,

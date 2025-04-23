@@ -10,7 +10,7 @@ std::string format_time(std::int64_t sec);
 std::string format_time_now();
 
 class HEMPLATE_EXPORT rss
-    : public element_builder<tag<"rss">, element::Type::Boolean>
+    : public element_builder<"rss", element::Type::Boolean>
 {
 public:
   static constexpr const auto default_version = "2.0";
@@ -46,7 +46,7 @@ public:
 };
 
 class HEMPLATE_EXPORT atomLink  // NOLINT *-identifier-naming
-    : public element_builder<tag<"atom:link">, element::Type::Boolean>
+    : public element_builder<"atom:link", element::Type::Boolean>
 {
 public:
   static constexpr const auto default_rel = "self";
@@ -103,37 +103,37 @@ using hemplate::xml;
 
 // clang-format off
 // NOLINTBEGIN *-identifier-naming
-using author         = element_builder<tag<"author">, element::Type::Boolean>;
-using category       = element_builder<tag<"category">, element::Type::Boolean>;
-using channel        = element_builder<tag<"channel">, element::Type::Boolean>;
-using cloud          = element_builder<tag<"cloud">, element::Type::Atomic>;
-using comments       = element_builder<tag<"comments">, element::Type::Boolean>;
-using copyright      = element_builder<tag<"copyright">, element::Type::Boolean>;
-using description    = element_builder<tag<"description">, element::Type::Boolean>;
-using docs           = element_builder<tag<"docs">, element::Type::Boolean>;
-using enclosure      = element_builder<tag<"enclosure">, element::Type::Atomic>;
-using generator      = element_builder<tag<"generator">, element::Type::Boolean>;
-using guid           = element_builder<tag<"guid">, element::Type::Boolean>;
-using height         = element_builder<tag<"height">, element::Type::Boolean>;
-using image          = element_builder<tag<"image">, element::Type::Boolean>;
-using item           = element_builder<tag<"item">, element::Type::Boolean>;
-using language       = element_builder<tag<"language">, element::Type::Boolean>;
-using lastBuildDate  = element_builder<tag<"lastBuildDate">, element::Type::Boolean>;
-using link           = element_builder<tag<"link">, element::Type::Boolean>;
-using managingEditor = element_builder<tag<"managingEditor">, element::Type::Boolean>;
-using name           = element_builder<tag<"name">, element::Type::Boolean>;
-using pubDate        = element_builder<tag<"pubDate">, element::Type::Boolean>;
-using rating         = element_builder<tag<"rating">, element::Type::Boolean>;
-using skipDays       = element_builder<tag<"skipDays">, element::Type::Boolean>;
-using skipHours      = element_builder<tag<"skipHours">, element::Type::Boolean>;
-using source         = element_builder<tag<"source">, element::Type::Boolean>;
-using text           = element_builder<tag<"">, element::Type::Boolean>;
-using textinput      = element_builder<tag<"textinput">, element::Type::Boolean>;
-using title          = element_builder<tag<"title">, element::Type::Boolean>;
-using ttl            = element_builder<tag<"ttl">, element::Type::Boolean>;
-using url            = element_builder<tag<"url">, element::Type::Boolean>;
-using webMaster      = element_builder<tag<"webMaster">, element::Type::Boolean>;
-using width          = element_builder<tag<"width">, element::Type::Boolean>;
+using author         = element_builder<"author", element::Type::Boolean>;
+using category       = element_builder<"category", element::Type::Boolean>;
+using channel        = element_builder<"channel", element::Type::Boolean>;
+using cloud          = element_builder<"cloud", element::Type::Atomic>;
+using comments       = element_builder<"comments", element::Type::Boolean>;
+using copyright      = element_builder<"copyright", element::Type::Boolean>;
+using description    = element_builder<"description", element::Type::Boolean>;
+using docs           = element_builder<"docs", element::Type::Boolean>;
+using enclosure      = element_builder<"enclosure", element::Type::Atomic>;
+using generator      = element_builder<"generator", element::Type::Boolean>;
+using guid           = element_builder<"guid", element::Type::Boolean>;
+using height         = element_builder<"height", element::Type::Boolean>;
+using image          = element_builder<"image", element::Type::Boolean>;
+using item           = element_builder<"item", element::Type::Boolean>;
+using language       = element_builder<"language", element::Type::Boolean>;
+using lastBuildDate  = element_builder<"lastBuildDate", element::Type::Boolean>;
+using link           = element_builder<"link", element::Type::Boolean>;
+using managingEditor = element_builder<"managingEditor", element::Type::Boolean>;
+using name           = element_builder<"name", element::Type::Boolean>;
+using pubDate        = element_builder<"pubDate", element::Type::Boolean>;
+using rating         = element_builder<"rating", element::Type::Boolean>;
+using skipDays       = element_builder<"skipDays", element::Type::Boolean>;
+using skipHours      = element_builder<"skipHours", element::Type::Boolean>;
+using source         = element_builder<"source", element::Type::Boolean>;
+using text           = element_builder<"", element::Type::Boolean>;
+using textinput      = element_builder<"textinput", element::Type::Boolean>;
+using title          = element_builder<"title", element::Type::Boolean>;
+using ttl            = element_builder<"ttl", element::Type::Boolean>;
+using url            = element_builder<"url", element::Type::Boolean>;
+using webMaster      = element_builder<"webMaster", element::Type::Boolean>;
+using width          = element_builder<"width", element::Type::Boolean>;
 // NOLINTEND *-identifier-naming
 // clang-format on
 

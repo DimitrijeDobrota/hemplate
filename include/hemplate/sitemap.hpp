@@ -7,7 +7,7 @@ namespace hemplate::sitemap
 {
 
 class HEMPLATE_EXPORT urlset
-    : public element_builder<tag<"urlset">, element::Type::Boolean>
+    : public element_builder<"urlset", element::Type::Boolean>
 {
 public:
   static constexpr const auto default_xmlns =
@@ -37,11 +37,11 @@ public:
 
 // clang-format off
 // NOLINTBEGIN *-identifier-naming
-using changefreq = element_builder<tag<"changefreq">, element::Type::Boolean>;
-using lastmod    = element_builder<tag<"lastmod">, element::Type::Boolean>;
-using loc        = element_builder<tag<"loc">, element::Type::Boolean>;
-using url        = element_builder<tag<"url">, element::Type::Boolean>;
-using priority   = element_builder<tag<"priority">, element::Type::Boolean>;
+using changefreq = element_builder<"changefreq", element::Type::Boolean>;
+using lastmod    = element_builder<"lastmod", element::Type::Boolean>;
+using loc        = element_builder<"loc", element::Type::Boolean>;
+using url        = element_builder<"url", element::Type::Boolean>;
+using priority   = element_builder<"priority", element::Type::Boolean>;
 // NOLINTEND *-identifier-naming
 // clang-format on
 

@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include <based/string.hpp>
+
 #include "hemplate/attribute.hpp"
 #include "hemplate/hemplate_export.hpp"
 
@@ -104,7 +106,7 @@ private:
   {
   }
 
-  template<typename Tag, element::Type MyType>
+  template<based::string_literal Tag, element::Type MyType>
   friend class element_builder;
 
   void render_atomic(std::ostream& out, std::size_t indent_value) const;
@@ -130,51 +132,46 @@ public:
   bool tgl_state() const { return *m_state = !*m_state; }
 };
 
-template<typename Tag, element::Type MyType>
+template<based::string_literal Tag, element::Type MyType>
 class HEMPLATE_EXPORT element_builder : public element
 {
   static bool m_state;  // NOLINT
 
 public:
   explicit element_builder(std::string_view data)
-      : element(m_state, MyType, Tag::get_name(), data)
+      : element(m_state, MyType, Tag.data(), data)
   {
   }
 
   explicit element_builder(const std::derived_from<element> auto&... children)
-      : element(m_state, MyType, Tag::get_name(), children...)
+      : element(m_state, MyType, Tag.data(), children...)
   {
   }
 
   explicit element_builder(std::span<const element> children)
-      : element(m_state, MyType, Tag::get_name(), children)
+      : element(m_state, MyType, Tag.data(), children)
   {
   }
 
   explicit element_builder(attribute_list attributes, std::string_view data)
-      : element(m_state, MyType, Tag::get_name(), std::move(attributes), data)
+      : element(m_state, MyType, Tag.data(), std::move(attributes), data)
   {
   }
 
   explicit element_builder(attribute_list attributes,
                            const std::derived_from<element> auto&... children)
-      : element(m_state,
-                MyType,
-                Tag::get_name(),
-                std::move(attributes),
-                children...)
+      : element(m_state, MyType, Tag.data(), std::move(attributes), children...)
   {
   }
 
   explicit element_builder(attribute_list attributes,
                            std::span<const element> children)
-      : element(
-            m_state, MyType, Tag::get_name(), std::move(attributes), children)
+      : element(m_state, MyType, Tag.data(), std::move(attributes), children)
   {
   }
 };
 
-template<typename Tag, element::Type Type>
+template<based::string_literal Tag, element::Type Type>
 bool element_builder<Tag, Type>::m_state = false;  // NOLINT
 
 }  // namespace hemplate
