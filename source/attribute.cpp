@@ -26,20 +26,14 @@ attribute_list::attribute_list(attribute attr)
   set(std::move(attr));
 }
 
-bool attribute_list::empty() const
-{
-  return m_attributes.empty() && m_class.value().empty()
-      && m_style.value().empty();
-}
-
 attribute_list& attribute_list::set(const attribute_list& list)
 {
   for (const auto& attr : list.m_attributes) {
     set(attr);
   }
 
-  set(m_class);
-  set(m_style);
+  set(list.m_class);
+  set(list.m_style);
 
   return (*this);
 }

@@ -26,7 +26,7 @@ public:
   {
   }
 
-  operator std::string() const  // NOLINT *-explicit-constructor
+  explicit operator std::string() const
   {
     if (empty()) {
       return name();
@@ -58,25 +58,27 @@ public:
   attribute_list add(const attribute_list& list) const;
   attribute_list add(attribute attr) const;
 
-  bool empty() const;
-
   explicit operator std::string() const
   {
     std::string res;
 
     if (!m_class.empty()) {
-      res += m_class;
+      res += std::string(m_class);
       res += ' ';
     }
 
     if (!m_style.empty()) {
-      res += m_style;
+      res += std::string(m_style);
       res += ' ';
     }
 
     for (const auto& attr : m_attributes) {
-      res += attr;
+      res += std::string(attr);
       res += ' ';
+    }
+
+    if (!res.empty()) {
+      res.pop_back();
     }
 
     return res;

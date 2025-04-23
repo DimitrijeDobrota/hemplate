@@ -22,6 +22,7 @@ function(add_test NAME)
 endfunction()
 
 add_test(attribute)
+add_test(attribute_list)
 
 # ---- End-of-file commands ----
 

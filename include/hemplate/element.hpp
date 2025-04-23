@@ -31,8 +31,6 @@ public:
   const attribute_list& attributes() const { return *this; }
 
 private:
-  using attribute_list::empty;
-
   template<based::string_literal Tag, element::Type MyType>
   friend class element_builder;
 
