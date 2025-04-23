@@ -1,0 +1,23 @@
+{
+  "name": "hemplate",
+  "version-semver": "0.4.0",
+  "dependencies": [
+      {
+          "name": "based",
+          "version>=": "0.1"
+      }
+  ],
+  "default-features": [],
+  "features": {
+    "test": {
+      "description": "Dependencies for testing",
+      "dependencies": [
+        {
+          "name": "catch2",
+          "version>=": "3.7.1"
+        }
+      ]
+    }
+  },
+  "builtin-baseline": "eba7c6a894fce24146af4fdf161fef8e90dd6be3"
+}

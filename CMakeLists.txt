@@ -13,6 +13,8 @@ project(
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
 
+find_package(based 0.1 CONFIG REQUIRED)
+
 # ---- Declare library ----
 
 add_library(
@@ -21,6 +23,7 @@ add_library(
     source/element.cpp
     source/attribute.cpp
 )
+target_link_libraries(hemplate_hemplate PUBLIC based::based)
 add_library(hemplate::hemplate ALIAS hemplate_hemplate)
 
 include(GenerateExportHeader)
@@ -64,6 +67,16 @@ target_compile_features(hemplate_hemplate PUBLIC cxx_std_20)
 if(NOT CMAKE_SKIP_INSTALL_RULES)
   include(cmake/install-rules.cmake)
 endif()
+
+# ---- Examples ----
+
+if(PROJECT_IS_TOP_LEVEL)
+  option(BUILD_EXAMPLES "Build examples tree." "${hemplate_DEVELOPER_MODE}")
+  if(BUILD_EXAMPLES)
+    add_subdirectory(example)
+  endif()
+endif()
+
 
 # ---- Developer mode ----
 

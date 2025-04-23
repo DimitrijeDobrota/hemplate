@@ -14,23 +14,17 @@ The big source of inspiration for this project is GNU cgicc.
 ## Dependencies
 
 * CMake 3.14 or latter
-* Compiler with C++20 support (tested: clang 16.0.5, gcc 13.2.0)
+* Compiler with C++20 support (tested on clang version 19.1.7)
 
 
 ## Building and installing
 
-See the [BUILDING](BUILDING.md) document.
+See the [`BUILDING`](BUILDING.md) document.
 
 
 ## Usage
 
-> Please reference demo folder for relevant usage example.
-
-
-## Help
-
-Refer to [GNU cgicc documentation](https://www.gnu.org/software/chicc/)
-
+> Please reference example folder for relevant usage examples.
 
 ## Version History
 
@@ -43,14 +37,12 @@ Refer to [GNU cgicc documentation](https://www.gnu.org/software/chicc/)
 
 ## Contributing
 
-See the [CONTRIBUTING](CONTRIBUTING.md) document.
+See the [`CONTRIBUTING`](CONTRIBUTING.md) document.
 
 
-## Licensing
+## License
 
-This project is licensed under the MIT License -
-see the [LICENSE](LICENSE.md) document for details
-
+This project is licensed under the MIT License - see the [`LICENSE`](LICENSE.md) file for details
 
 ## Acknowledgments
 

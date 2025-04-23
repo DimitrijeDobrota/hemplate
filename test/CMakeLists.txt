@@ -5,20 +5,21 @@ project(hemplateTests LANGUAGES CXX)
 include(../cmake/project-is-top-level.cmake)
 include(../cmake/folders.cmake)
 
+
 # ---- Dependencies ----
 
-if(PROJECT_IS_TOP_LEVEL)
-  find_package(hemplate REQUIRED)
-  enable_testing()
-endif()
+find_package(Catch2 REQUIRED)
+include(Catch)
 
 # ---- Tests ----
 
-add_executable(hemplate_test source/hemplate_test.cpp)
-target_link_libraries(hemplate_test PRIVATE hemplate::hemplate)
-target_compile_features(hemplate_test PRIVATE cxx_std_20)
-
-add_test(NAME hemplate_test COMMAND hemplate_test)
+function(add_test NAME)
+  add_executable("${NAME}" "source/${NAME}.cpp")
+  target_link_libraries("${NAME}" PRIVATE hemplate::hemplate)
+  target_link_libraries("${NAME}" PRIVATE Catch2::Catch2WithMain)
+  target_compile_features("${NAME}" PRIVATE cxx_std_20)
+  catch_discover_tests("${NAME}")
+endfunction()
 
 # ---- End-of-file commands ----
 
