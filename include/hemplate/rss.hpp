@@ -12,29 +12,33 @@ std::string format_time_now();
 class HEMPLATE_EXPORT rss
     : public element_builder<"rss", element::Type::Boolean>
 {
+  static auto attributes(std::string_view version, std::string_view xmlns)
+  {
+    return attribute_list {
+        {"version", version},
+        {"xmlns", xmlns},
+    };
+  }
+
 public:
   static constexpr const auto default_version = "2.0";
   static constexpr const auto default_xmlns = "http://www.w3.org/2005/Atom";
 
-  explicit rss(std::string version,
-               std::string xmlns,
-               const std::derived_from<element> auto&... children)
-      : element_builder(
-            {{"version", std::move(version)}, {"xmlns:atom", std::move(xmlns)}},
-            children...)
+  explicit rss(std::string_view version,
+               std::string_view xmlns,
+               const is_element auto&... children)
+      : element_builder(attributes(version, xmlns), children...)
   {
   }
 
-  explicit rss(std::string version,
-               std::string xmlns,
+  explicit rss(std::string_view version,
+               std::string_view xmlns,
                std::span<const element> children)
-      : element_builder(
-            {{"version", std::move(version)}, {"xmlns:atom", std::move(xmlns)}},
-            children)
+      : element_builder(attributes(version, xmlns), children)
   {
   }
 
-  explicit rss(const std::derived_from<element> auto&... children)
+  explicit rss(const is_element auto&... children)
       : rss(default_version, default_xmlns, children...)
   {
   }
@@ -48,49 +52,53 @@ public:
 class HEMPLATE_EXPORT atomLink  // NOLINT *-identifier-naming
     : public element_builder<"atom:link", element::Type::Boolean>
 {
+  static auto attributes(attribute_list& list,
+                         std::string_view rel,
+                         std::string_view type)
+  {
+    return list.set({
+        {"rel", rel},
+        {"type", type},
+    });
+  }
+
 public:
   static constexpr const auto default_rel = "self";
   static constexpr const auto default_type = "application/rss+xml";
 
-  explicit atomLink(std::string rel,
-                    std::string type,
-                    const attribute_list& attributes,
-                    const std::derived_from<element> auto&... children)
-      : element_builder(attributes.add({{"rel", std::move(rel)},
-                                        {"type", std::move(type)}}),
-                        children...)
+  explicit atomLink(std::string_view rel,
+                    std::string_view type,
+                    attribute_list attrs,
+                    const is_element auto&... children)
+      : element_builder(attributes(attrs, rel, type), children...)
   {
   }
 
-  explicit atomLink(std::string rel,
-                    std::string type,
-                    const attribute_list& attributes,
+  explicit atomLink(std::string_view rel,
+                    std::string_view type,
+                    attribute_list attrs,
                     std::span<const element> children)
-      : element_builder(attributes.add({{"rel", std::move(rel)},
-                                        {"type", std::move(type)}}),
-                        children)
+      : element_builder(attributes(attrs, rel, type), children)
   {
   }
 
-  explicit atomLink(const std::derived_from<element> auto&... children)
-      : atomLink(default_rel, default_type, {}, children...)
+  explicit atomLink(attribute_list attrs, const is_element auto&... children)
+      : atomLink(default_rel, default_type, std::move(attrs), children...)
+  {
+  }
+
+  explicit atomLink(attribute_list attrs, std::span<const element> children)
+      : atomLink(default_rel, default_type, std::move(attrs), children)
+  {
+  }
+
+  explicit atomLink(const is_element auto&... children)
+      : atomLink({}, children...)
   {
   }
 
   explicit atomLink(std::span<const element> children)
-      : atomLink(default_rel, default_type, {}, children)
-  {
-  }
-
-  explicit atomLink(const attribute_list& attributes,
-                    const std::derived_from<element> auto&... children)
-      : atomLink(default_rel, default_type, attributes, children...)
-  {
-  }
-
-  explicit atomLink(const attribute_list& attributes,
-                    std::span<const element> children)
-      : atomLink(default_rel, default_type, attributes, children)
+      : atomLink({}, children)
   {
   }
 };

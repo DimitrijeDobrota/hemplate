@@ -13,18 +13,6 @@ element& element::add(const element& elem)
   return *this;
 }
 
-element& element::set(const std::string& name)
-{
-  m_attributes.set(name);
-  return *this;
-}
-
-element& element::set(const std::string& name, const std::string& value)
-{
-  m_attributes.set(name, value);
-  return *this;
-}
-
 void element::render_comment(std::ostream& out, std::size_t indent_value) const
 {
   const std::string indent(indent_value, ' ');
@@ -102,6 +90,28 @@ void element::render(std::ostream& out, std::size_t indent_value) const
     render_children(out, indent_value + 2);
     out << indent << std::format("</{}>\n", m_name);
   }
+}
+
+element& element::set(const attribute_list& list)
+{
+  m_attributes.set(list);
+  return *this;
+}
+
+element& element::set(attribute attr)
+{
+  m_attributes.set(std::move(attr));
+  return *this;
+}
+
+element element::add(const attribute_list& list) const
+{
+  return element(*this).set(list);
+}
+
+element element::add(attribute attr) const
+{
+  return element(*this).set(std::move(attr));
 }
 
 }  // namespace hemplate

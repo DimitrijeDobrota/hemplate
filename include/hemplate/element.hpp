@@ -1,5 +1,4 @@
 #pragma once
-
 #include <span>
 #include <string>
 #include <vector>
@@ -11,6 +10,11 @@
 
 namespace hemplate
 {
+
+class element;
+
+template<typename T>
+concept is_element = std::derived_from<T, element>;
 
 class HEMPLATE_EXPORT element
 {
@@ -36,7 +40,7 @@ private:
   explicit element(bool& state,
                    Type type,
                    std::string_view name,
-                   const std::derived_from<element> auto&... children)
+                   const is_element auto&... children)
       : m_state(&state)
       , m_type(type)
       , m_name(name)
@@ -44,11 +48,10 @@ private:
   {
   }
 
-  explicit element(
-      bool& state,
-      Type type,
-      std::string_view name,  // NOLINT *-easily-swappable-parameters
-      std::string_view data)
+  explicit element(bool& state,
+                   Type type,
+                   std::string_view name,
+                   std::string_view data)
       : m_state(&state)
       , m_type(type)
       , m_name(name)
@@ -71,7 +74,7 @@ private:
                    Type type,
                    std::string_view name,
                    attribute_list attributes,
-                   const std::derived_from<element> auto&... children)
+                   const is_element auto&... children)
       : m_state(&state)
       , m_type(type)
       , m_name(name)
@@ -125,8 +128,11 @@ public:
 
   element& add(const element& elem);
 
-  element& set(const std::string& name);
-  element& set(const std::string& name, const std::string& value);
+  element& set(const attribute_list& list);
+  element& set(attribute attr);
+
+  element add(const attribute_list& list) const;
+  element add(attribute attr) const;
 
   bool get_state() const { return *m_state; }
   bool tgl_state() const { return *m_state = !*m_state; }
@@ -138,35 +144,10 @@ class HEMPLATE_EXPORT element_builder : public element
   static bool m_state;  // NOLINT
 
 public:
-  explicit element_builder(std::string_view data)
-      : element(m_state, MyType, Tag.data(), data)
-  {
-  }
-
-  explicit element_builder(const std::derived_from<element> auto&... children)
-      : element(m_state, MyType, Tag.data(), children...)
-  {
-  }
-
-  explicit element_builder(std::span<const element> children)
-      : element(m_state, MyType, Tag.data(), children)
-  {
-  }
-
-  explicit element_builder(attribute_list attributes, std::string_view data)
-      : element(m_state, MyType, Tag.data(), std::move(attributes), data)
-  {
-  }
-
-  explicit element_builder(attribute_list attributes,
-                           const std::derived_from<element> auto&... children)
-      : element(m_state, MyType, Tag.data(), std::move(attributes), children...)
-  {
-  }
-
-  explicit element_builder(attribute_list attributes,
-                           std::span<const element> children)
-      : element(m_state, MyType, Tag.data(), std::move(attributes), children)
+  template<typename... Args>
+  explicit element_builder(Args&&... args)
+      // NOLINTNEXTLINE *-no-array-decay
+      : element(m_state, MyType, Tag.data(), std::forward<Args>(args)...)
   {
   }
 };

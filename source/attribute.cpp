@@ -3,60 +3,54 @@
 namespace hemplate
 {
 
+attribute& attribute::append(std::string_view delim, const std::string& val)
+{
+  if (!value.empty()) {
+    if (!empty()) {
+      value += std::string(delim);
+    }
+    value += val;
+  }
+  return *this;
+}
+
 attribute_list::attribute_list(std::initializer_list<attribute> list)
 {
   for (const auto& attr : list) {
-    set(attr.get_name(), attr.get_value());
+    set(attr);
   }
 }
 
-attribute_list::attribute_list(attribute attr)  // NOLINT
+attribute_list::attribute_list(attribute attr)
 {
-  set(attr.get_name(), attr.get_value());
+  set(std::move(attr));
 }
 
 bool attribute_list::empty() const
 {
-  return m_attributes.empty() && m_class.get_value().empty()
-      && m_style.get_value().empty();
+  return m_attributes.empty() && m_class.value.empty() && m_style.value.empty();
 }
 
 attribute_list& attribute_list::set(const attribute_list& list)
 {
   for (const auto& attr : list.m_attributes) {
-    set(attr.get_name(), attr.get_value());
+    set(attr);
   }
-  set("class", list.m_class);
-  set("style", list.m_style);
+
+  set(m_class);
+  set(m_style);
 
   return (*this);
 }
 
-attribute_list& attribute_list::set(const std::string& name)
+attribute_list& attribute_list::set(attribute attr)
 {
-  if (name != "class" && name != "style") {
-    m_attributes.emplace_back(name);
-  }
-  return *this;
-}
-
-attribute_list& attribute_list::set(const std::string& name,
-                                    const std::string& value)
-{
-  if (name == "class") {
-    if (m_class.get_value().empty()) {
-      m_class.set_value(value);
-    } else {
-      m_class.set_value(m_class.get_value() + " " + value);
-    }
-  } else if (name == "style") {
-    if (m_style.get_value().empty()) {
-      m_style.set_value(value);
-    } else {
-      m_style.set_value(m_style.get_value() + "; " + value);
-    }
+  if (attr.name == "class") {
+    m_class.append(" ", attr.value);
+  } else if (attr.name == "style") {
+    m_class.append("; ", attr.value);
   } else {
-    m_attributes.emplace_back(name, value);
+    m_attributes.emplace_back(std::move(attr));
   }
 
   return *this;
@@ -64,24 +58,12 @@ attribute_list& attribute_list::set(const std::string& name,
 
 attribute_list attribute_list::add(const attribute_list& list) const
 {
-  attribute_list res = *this;
-  res.set(list);
-  return res;
+  return attribute_list(*this).set(list);
 }
 
-attribute_list attribute_list::add(const std::string& name) const
+attribute_list attribute_list::add(attribute attr) const
 {
-  attribute_list res = *this;
-  res.set(name);
-  return res;
-}
-
-attribute_list attribute_list::add(const std::string& name,
-                                   const std::string& value) const
-{
-  attribute_list res = *this;
-  res.set(name, value);
-  return res;
+  return attribute_list(*this).set(std::move(attr));
 }
 
 }  // namespace hemplate

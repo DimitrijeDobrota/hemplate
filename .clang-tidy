@@ -12,6 +12,7 @@ Checks: "*,\
   -llvmlibc-*,\
   -cppcoreguidelines-avoid-do-while,\
   -cppcoreguidelines-pro-bounds-constant-array-index,\
+  -bugprone-easily-swappable-parameters,\
   -misc-include-cleaner,\
   -misc-non-private-member-variables-in-classes,\
   -misc-no-recursion,\

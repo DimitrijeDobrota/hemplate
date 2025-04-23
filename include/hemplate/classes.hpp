@@ -22,8 +22,8 @@ public:
 
   explicit xml(std::string version = default_version,
                std::string encoding = default_encoding)
-      : element_builder({{"version", std::move(version)},
-                         {"encoding", std::move(encoding)}})
+      : element_builder(attribute_list {{"version", std::move(version)},
+                                        {"encoding", std::move(encoding)}})
   {
   }
 };

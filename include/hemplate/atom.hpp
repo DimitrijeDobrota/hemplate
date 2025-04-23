@@ -12,21 +12,27 @@ std::string format_time_now();
 class HEMPLATE_EXPORT feed
     : public element_builder<"feed", element::Type::Boolean>
 {
+  static auto attributes(std::string_view xmlns)
+  {
+    return attribute_list {
+        {"xmlns", xmlns},
+    };
+  }
+
 public:
   static constexpr const auto default_xmlns = "http://www.w3.org/2005/Atom";
 
-  explicit feed(std::string xmlns,
-                const std::derived_from<element> auto&... children)
-      : element_builder({{"xmlns", std::move(xmlns)}}, children...)
+  explicit feed(std::string_view xmlns, const is_element auto&... children)
+      : element_builder(attributes(xmlns), children...)
   {
   }
 
-  explicit feed(std::string xmlns, std::span<const element> children)
-      : element_builder({{"xmlns", std::move(xmlns)}}, children)
+  explicit feed(std::string_view xmlns, std::span<const element> children)
+      : element_builder(attributes(xmlns), children)
   {
   }
 
-  explicit feed(const std::derived_from<element> auto&... children)
+  explicit feed(const is_element auto&... children)
       : feed(default_xmlns, children...)
   {
   }

@@ -9,22 +9,28 @@ namespace hemplate::sitemap
 class HEMPLATE_EXPORT urlset
     : public element_builder<"urlset", element::Type::Boolean>
 {
+  static auto attributes(std::string_view xmlns)
+  {
+    return attribute_list {
+        {"xmlns", xmlns},
+    };
+  }
+
 public:
   static constexpr const auto default_xmlns =
       "http://www.sitemaps.org/schemas/sitemap/0.9";
 
-  explicit urlset(std::string xmlns,
-                  const std::derived_from<element> auto&... children)
-      : element_builder({{"xmlns", std::move(xmlns)}}, children...)
+  explicit urlset(std::string_view xmlns, const is_element auto&... children)
+      : element_builder(attributes(xmlns), children...)
   {
   }
 
-  explicit urlset(std::string xmlns, std::span<const element> children)
-      : element_builder({{"xmlns", std::move(xmlns)}}, children)
+  explicit urlset(std::string_view xmlns, std::span<const element> children)
+      : element_builder(attributes(xmlns), children)
   {
   }
 
-  explicit urlset(const std::derived_from<element> auto&... children)
+  explicit urlset(const is_element auto&... children)
       : urlset(default_xmlns, children...)
   {
   }
@@ -34,6 +40,12 @@ public:
   {
   }
 };
+
+using hemplate::comment;
+using hemplate::element;
+using hemplate::transform;
+using hemplate::transparent;
+using hemplate::xml;
 
 // clang-format off
 // NOLINTBEGIN *-identifier-naming
