@@ -21,6 +21,8 @@ function(add_test NAME)
   catch_discover_tests("${NAME}")
 endfunction()
 
+add_test(attribute)
+
 # ---- End-of-file commands ----
 
 add_folders(Test)

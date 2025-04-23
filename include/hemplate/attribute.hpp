@@ -9,30 +9,37 @@
 namespace hemplate
 {
 
-struct HEMPLATE_EXPORT attribute
+class HEMPLATE_EXPORT attribute
 {
-  std::string name;
-  std::string value;
+  std::string m_name;
+  std::string m_value;
 
-  explicit attribute(std::string_view namee)
-      : name(namee)
+public:
+  attribute(std::string_view name)  // NOLINT *-explicit-constructor
+      : m_name(name)
   {
   }
 
-  attribute(std::string_view namee, std::string_view val)
-      : name(namee)
-      , value(val)
+  attribute(std::string_view name, std::string_view val)
+      : m_name(name)
+      , m_value(val)
   {
   }
 
   operator std::string() const  // NOLINT *-explicit-constructor
   {
-    return name + "=\"" + value + "\"";
+    if (empty()) {
+      return name();
+    }
+    return name() + "=\"" + value() + "\"";
   }
+
+  const std::string& name() const { return m_name; }
+  const std::string& value() const { return m_value; }
 
   bool operator==(const attribute& rhs) const = default;
 
-  bool empty() const { return value.empty(); }
+  bool empty() const { return value().empty(); }
 
   attribute& append(std::string_view delim, const std::string& val);
 };

@@ -5,11 +5,11 @@ namespace hemplate
 
 attribute& attribute::append(std::string_view delim, const std::string& val)
 {
-  if (!value.empty()) {
+  if (!val.empty()) {
     if (!empty()) {
-      value += std::string(delim);
+      m_value += std::string(delim);
     }
-    value += val;
+    m_value += val;
   }
   return *this;
 }
@@ -28,7 +28,8 @@ attribute_list::attribute_list(attribute attr)
 
 bool attribute_list::empty() const
 {
-  return m_attributes.empty() && m_class.value.empty() && m_style.value.empty();
+  return m_attributes.empty() && m_class.value().empty()
+      && m_style.value().empty();
 }
 
 attribute_list& attribute_list::set(const attribute_list& list)
@@ -45,10 +46,10 @@ attribute_list& attribute_list::set(const attribute_list& list)
 
 attribute_list& attribute_list::set(attribute attr)
 {
-  if (attr.name == "class") {
-    m_class.append(" ", attr.value);
-  } else if (attr.name == "style") {
-    m_style.append("; ", attr.value);
+  if (attr.name() == "class") {
+    m_class.append(" ", attr.value());
+  } else if (attr.name() == "style") {
+    m_style.append("; ", attr.value());
   } else {
     m_attributes.emplace_back(std::move(attr));
   }
