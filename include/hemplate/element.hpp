@@ -16,7 +16,7 @@ class element;
 template<typename T>
 concept is_element = std::derived_from<T, element>;
 
-class HEMPLATE_EXPORT element
+class HEMPLATE_EXPORT element : public attribute_list
 {
 public:
   enum class Type : uint8_t
@@ -28,89 +28,92 @@ public:
     Transparent,
   };
 
+  const attribute_list& attributes() const { return *this; }
+
 private:
+  using attribute_list::empty;
+
+  template<based::string_literal Tag, element::Type MyType>
+  friend class element_builder;
+
   bool* m_state;
   Type m_type;
-  std::string m_name;
+  std::string m_tag;
 
-  attribute_list m_attributes;
   std::vector<element> m_children;
   std::string m_data;
 
   explicit element(bool& state,
                    Type type,
-                   std::string_view name,
+                   std::string_view tag,
                    const is_element auto&... children)
       : m_state(&state)
       , m_type(type)
-      , m_name(name)
+      , m_tag(tag)
       , m_children(std::initializer_list<element> {children...})
   {
   }
 
   explicit element(bool& state,
                    Type type,
-                   std::string_view name,
+                   std::string_view tag,
                    std::string_view data)
       : m_state(&state)
       , m_type(type)
-      , m_name(name)
+      , m_tag(tag)
       , m_data(data)
   {
   }
 
   explicit element(bool& state,
                    Type type,
-                   std::string_view name,
+                   std::string_view tag,
                    std::span<const element> children)
       : m_state(&state)
       , m_type(type)
-      , m_name(name)
+      , m_tag(tag)
       , m_children(children.begin(), children.end())
   {
   }
 
   explicit element(bool& state,
                    Type type,
-                   std::string_view name,
+                   std::string_view tag,
                    attribute_list attributes,
                    const is_element auto&... children)
-      : m_state(&state)
+      : attribute_list(std::move(attributes))
+      , m_state(&state)
       , m_type(type)
-      , m_name(name)
-      , m_attributes(std::move(attributes))
+      , m_tag(tag)
       , m_children(std::initializer_list<element> {children...})
   {
   }
 
   explicit element(bool& state,
                    Type type,
-                   std::string_view name,
+                   std::string_view tag,
                    attribute_list attributes,
                    std::string_view data)
-      : m_state(&state)
+      : attribute_list(std::move(attributes))
+      , m_state(&state)
       , m_type(type)
-      , m_name(name)
-      , m_attributes(std::move(attributes))
+      , m_tag(tag)
       , m_data(data)
   {
   }
 
   explicit element(bool& state,
                    Type type,
-                   std::string_view name,
+                   std::string_view tag,
                    attribute_list attributes,
                    std::span<const element> children)
-      : m_state(&state)
+      : attribute_list(std::move(attributes))
+      , m_state(&state)
       , m_type(type)
-      , m_name(name)
-      , m_attributes(std::move(attributes))
+      , m_tag(tag)
       , m_children(children.begin(), children.end())
   {
   }
-
-  template<based::string_literal Tag, element::Type MyType>
-  friend class element_builder;
 
   void render_atomic(std::ostream& out, std::size_t indent_value) const;
   void render_boolean(std::ostream& out, std::size_t indent_value) const;
@@ -126,13 +129,11 @@ public:
     return out;
   }
 
-  element& add(const element& elem);
-
-  element& set(const attribute_list& list);
-  element& set(attribute attr);
-
-  element add(const attribute_list& list) const;
-  element add(attribute attr) const;
+  element& add(const element& elem)
+  {
+    m_children.emplace_back(elem);
+    return *this;
+  }
 
   bool get_state() const { return *m_state; }
   bool tgl_state() const { return *m_state = !*m_state; }

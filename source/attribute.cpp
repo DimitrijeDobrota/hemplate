@@ -48,7 +48,7 @@ attribute_list& attribute_list::set(attribute attr)
   if (attr.name == "class") {
     m_class.append(" ", attr.value);
   } else if (attr.name == "style") {
-    m_class.append("; ", attr.value);
+    m_style.append("; ", attr.value);
   } else {
     m_attributes.emplace_back(std::move(attr));
   }

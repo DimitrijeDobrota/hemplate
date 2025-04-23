@@ -7,12 +7,6 @@
 namespace hemplate
 {
 
-element& element::add(const element& elem)
-{
-  m_children.emplace_back(elem);
-  return *this;
-}
-
 void element::render_comment(std::ostream& out, std::size_t indent_value) const
 {
   const std::string indent(indent_value, ' ');
@@ -24,13 +18,13 @@ void element::render_atomic(std::ostream& out, std::size_t indent_value) const
 {
   const std::string indent(indent_value, ' ');
 
-  out << indent << std::format("<{} {}/>\n", m_name, m_attributes);
+  out << indent << std::format("<{} {}/>\n", m_tag, attributes());
 }
 
 void element::render_xml(std::ostream& out, std::size_t indent_value) const
 {
   const std::string indent(indent_value, ' ');
-  out << indent << std::format("<?xml {}?>\n", m_attributes);
+  out << indent << std::format("<?xml {}?>\n", attributes());
 }
 
 void element::render_children(std::ostream& out, std::size_t indent_value) const
@@ -61,13 +55,13 @@ void element::render(std::ostream& out, std::size_t indent_value) const
       break;
   }
 
-  if (m_name.empty()) {
+  if (m_tag.empty()) {
     out << indent << m_data << '\n';
     return;
   }
 
   if (!m_data.empty()) {
-    out << indent << std::format("<{} {}>\n", m_name, m_attributes);
+    out << indent << std::format("<{} {}>\n", m_tag, attributes());
 
     if (!m_children.empty()) {
       render_children(out, indent_value + 2);
@@ -75,43 +69,21 @@ void element::render(std::ostream& out, std::size_t indent_value) const
       out << indent << "  " << m_data << '\n';
     }
 
-    out << indent << std::format("</{}>\n", m_name);
+    out << indent << std::format("</{}>\n", m_tag);
     return;
   }
 
   if (m_children.empty()) {
     if (tgl_state()) {
-      out << indent << std::format("<{} {}>\n", m_name, m_attributes);
+      out << indent << std::format("<{} {}>\n", m_tag, attributes());
     } else {
-      out << indent << std::format("</{}>\n", m_name);
+      out << indent << std::format("</{}>\n", m_tag);
     }
   } else {
-    out << indent << std::format("<{} {}>\n", m_name, m_attributes);
+    out << indent << std::format("<{} {}>\n", m_tag, attributes());
     render_children(out, indent_value + 2);
-    out << indent << std::format("</{}>\n", m_name);
+    out << indent << std::format("</{}>\n", m_tag);
   }
-}
-
-element& element::set(const attribute_list& list)
-{
-  m_attributes.set(list);
-  return *this;
-}
-
-element& element::set(attribute attr)
-{
-  m_attributes.set(std::move(attr));
-  return *this;
-}
-
-element element::add(const attribute_list& list) const
-{
-  return element(*this).set(list);
-}
-
-element element::add(attribute attr) const
-{
-  return element(*this).set(std::move(attr));
 }
 
 }  // namespace hemplate
