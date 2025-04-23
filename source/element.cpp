@@ -4,7 +4,8 @@
 
 #include "hemplate/element.hpp"
 
-namespace hemplate {
+namespace hemplate
+{
 
 element& element::add(const element& elem)
 {
@@ -44,11 +45,9 @@ void element::render_xml(std::ostream& out, std::size_t indent_value) const
   out << indent << std::format("<?xml {}?>\n", m_attributes);
 }
 
-void element::render_children(std::ostream& out,
-                              std::size_t indent_value) const
+void element::render_children(std::ostream& out, std::size_t indent_value) const
 {
-  for (const auto& child : m_children)
-  {
+  for (const auto& child : m_children) {
     child.render(out, indent_value);
   }
 }
@@ -57,8 +56,7 @@ void element::render(std::ostream& out, std::size_t indent_value) const
 {
   const std::string indent(indent_value, ' ');
 
-  switch (m_type)
-  {
+  switch (m_type) {
     case Type::Atomic:
       render_atomic(out, indent_value);
       return;
@@ -75,22 +73,17 @@ void element::render(std::ostream& out, std::size_t indent_value) const
       break;
   }
 
-  if (m_name.empty())
-  {
+  if (m_name.empty()) {
     out << indent << m_data << '\n';
     return;
   }
 
-  if (!m_data.empty())
-  {
+  if (!m_data.empty()) {
     out << indent << std::format("<{} {}>\n", m_name, m_attributes);
 
-    if (!m_children.empty())
-    {
+    if (!m_children.empty()) {
       render_children(out, indent_value + 2);
-    }
-    else
-    {
+    } else {
       out << indent << "  " << m_data << '\n';
     }
 
@@ -98,19 +91,13 @@ void element::render(std::ostream& out, std::size_t indent_value) const
     return;
   }
 
-  if (m_children.empty())
-  {
-    if (tgl_state())
-    {
+  if (m_children.empty()) {
+    if (tgl_state()) {
       out << indent << std::format("<{} {}>\n", m_name, m_attributes);
-    }
-    else
-    {
+    } else {
       out << indent << std::format("</{}>\n", m_name);
     }
-  }
-  else
-  {
+  } else {
     out << indent << std::format("<{} {}>\n", m_name, m_attributes);
     render_children(out, indent_value + 2);
     out << indent << std::format("</{}>\n", m_name);

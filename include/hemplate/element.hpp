@@ -7,7 +7,8 @@
 #include "hemplate/attribute.hpp"
 #include "hemplate/hemplate_export.hpp"
 
-namespace hemplate {
+namespace hemplate
+{
 
 class HEMPLATE_EXPORT element
 {
@@ -26,7 +27,7 @@ private:
   Type m_type;
   std::string m_name;
 
-  attributeList m_attributes;
+  attribute_list m_attributes;
   std::vector<element> m_children;
   std::string m_data;
 
@@ -41,10 +42,11 @@ private:
   {
   }
 
-  explicit element(bool& state,
-                   Type type,
-                   std::string_view name,
-                   std::string_view data)
+  explicit element(
+      bool& state,
+      Type type,
+      std::string_view name,  // NOLINT *-easily-swappable-parameters
+      std::string_view data)
       : m_state(&state)
       , m_type(type)
       , m_name(name)
@@ -66,7 +68,7 @@ private:
   explicit element(bool& state,
                    Type type,
                    std::string_view name,
-                   attributeList attributes,
+                   attribute_list attributes,
                    const std::derived_from<element> auto&... children)
       : m_state(&state)
       , m_type(type)
@@ -79,7 +81,7 @@ private:
   explicit element(bool& state,
                    Type type,
                    std::string_view name,
-                   attributeList attributes,
+                   attribute_list attributes,
                    std::string_view data)
       : m_state(&state)
       , m_type(type)
@@ -92,7 +94,7 @@ private:
   explicit element(bool& state,
                    Type type,
                    std::string_view name,
-                   attributeList attributes,
+                   attribute_list attributes,
                    std::span<const element> children)
       : m_state(&state)
       , m_type(type)
@@ -103,7 +105,7 @@ private:
   }
 
   template<typename Tag, element::Type MyType>
-  friend class elementBuilder;
+  friend class element_builder;
 
   void render_atomic(std::ostream& out, std::size_t indent_value) const;
   void render_boolean(std::ostream& out, std::size_t indent_value) const;
@@ -129,33 +131,33 @@ public:
 };
 
 template<typename Tag, element::Type MyType>
-class HEMPLATE_EXPORT elementBuilder : public element
+class HEMPLATE_EXPORT element_builder : public element
 {
   static bool m_state;  // NOLINT
 
 public:
-  explicit elementBuilder(std::string_view data)
+  explicit element_builder(std::string_view data)
       : element(m_state, MyType, Tag::get_name(), data)
   {
   }
 
-  explicit elementBuilder(const std::derived_from<element> auto&... children)
+  explicit element_builder(const std::derived_from<element> auto&... children)
       : element(m_state, MyType, Tag::get_name(), children...)
   {
   }
 
-  explicit elementBuilder(std::span<const element> children)
+  explicit element_builder(std::span<const element> children)
       : element(m_state, MyType, Tag::get_name(), children)
   {
   }
 
-  explicit elementBuilder(attributeList attributes, std::string_view data)
+  explicit element_builder(attribute_list attributes, std::string_view data)
       : element(m_state, MyType, Tag::get_name(), std::move(attributes), data)
   {
   }
 
-  explicit elementBuilder(attributeList attributes,
-                          const std::derived_from<element> auto&... children)
+  explicit element_builder(attribute_list attributes,
+                           const std::derived_from<element> auto&... children)
       : element(m_state,
                 MyType,
                 Tag::get_name(),
@@ -164,8 +166,8 @@ public:
   {
   }
 
-  explicit elementBuilder(attributeList attributes,
-                          std::span<const element> children)
+  explicit element_builder(attribute_list attributes,
+                           std::span<const element> children)
       : element(
             m_state, MyType, Tag::get_name(), std::move(attributes), children)
   {
@@ -173,6 +175,6 @@ public:
 };
 
 template<typename Tag, element::Type Type>
-bool elementBuilder<Tag, Type>::m_state = false;  // NOLINT
+bool element_builder<Tag, Type>::m_state = false;  // NOLINT
 
 }  // namespace hemplate

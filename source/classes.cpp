@@ -6,7 +6,8 @@
 #include "hemplate/atom.hpp"
 #include "hemplate/rss.hpp"
 
-namespace {
+namespace
+{
 
 auto sec_since_epoch(int64_t sec)
 {
@@ -25,7 +26,8 @@ auto get_time_now()
 
 }  // namespace
 
-namespace hemplate::atom {
+namespace hemplate::atom
+{
 
 std::string format_time(int64_t sec)
 {
@@ -40,7 +42,8 @@ std::string format_time_now()
 
 }  // namespace hemplate::atom
 
-namespace hemplate::rss {
+namespace hemplate::rss
+{
 
 std::string format_time(int64_t sec)
 {

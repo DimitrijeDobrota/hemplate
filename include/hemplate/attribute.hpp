@@ -7,7 +7,8 @@
 #include "hemplate/hemplate_export.hpp"
 #include "hemplate/streamable.hpp"
 
-namespace hemplate {
+namespace hemplate
+{
 
 class HEMPLATE_EXPORT attribute : public streamable<attribute>
 {
@@ -44,21 +45,21 @@ private:
   std::string m_value;
 };
 
-class HEMPLATE_EXPORT attributeList : public streamable<attributeList>
+class HEMPLATE_EXPORT attribute_list : public streamable<attribute_list>
 {
 public:
-  attributeList() = default;
+  attribute_list() = default;
 
-  attributeList(std::initializer_list<attribute> list);
-  attributeList(attribute attr);  // NOLINT
+  attribute_list(std::initializer_list<attribute> list);
+  attribute_list(attribute attr);  // NOLINT
 
-  attributeList& set(const attributeList& list);
-  attributeList& set(const std::string& name);
-  attributeList& set(const std::string& name, const std::string& value);
+  attribute_list& set(const attribute_list& list);
+  attribute_list& set(const std::string& name);
+  attribute_list& set(const std::string& name, const std::string& value);
 
-  attributeList add(const attributeList& list) const;
-  attributeList add(const std::string& name) const;
-  attributeList add(const std::string& name, const std::string& value) const;
+  attribute_list add(const attribute_list& list) const;
+  attribute_list add(const std::string& name) const;
+  attribute_list add(const std::string& name, const std::string& value) const;
 
   bool empty() const;
 
@@ -66,20 +67,17 @@ public:
   {
     std::string res;
 
-    if (!m_class.empty())
-    {
+    if (!m_class.empty()) {
       res += m_class;
       res += ' ';
     }
 
-    if (!m_style.empty())
-    {
+    if (!m_style.empty()) {
       res += m_style;
       res += ' ';
     }
 
-    for (const auto& attr : m_attributes)
-    {
+    for (const auto& attr : m_attributes) {
       res += attr;
       res += ' ';
     }
@@ -96,4 +94,4 @@ private:
 }  // namespace hemplate
 
 CUSTOM_FORMAT(hemplate::attribute)
-CUSTOM_FORMAT(hemplate::attributeList)
+CUSTOM_FORMAT(hemplate::attribute_list)

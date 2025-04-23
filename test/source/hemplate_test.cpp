@@ -7,8 +7,8 @@ int main()
 {
   using namespace hemplate;  // NOLINT
 
-  const attributeList li_attrs {{"class", "home_li"}};
-  const attributeList ul_attrs {
+  const attribute_list li_attrs {{"class", "home_li"}};
+  const attribute_list ul_attrs {
       {"id", "main_ul"},
       {"class", "home_ul"},
       {"style", "margin-bottom: 1em"},

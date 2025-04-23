@@ -6,7 +6,8 @@
 #include "hemplate/element.hpp"
 #include "hemplate/hemplate_export.hpp"
 
-namespace hemplate {
+namespace hemplate
+{
 
 template<std::size_t N>
 struct string_literal
@@ -29,24 +30,24 @@ struct tag
   static char const* get_name() { return Name.data(); }
 };
 
-using comment = elementBuilder<tag<"comment">, element::Type::Comment>;
+using comment = element_builder<tag<"comment">, element::Type::Comment>;
 
-class xml : public elementBuilder<tag<"xml">, element::Type::Xml>
+class xml : public element_builder<tag<"xml">, element::Type::Xml>
 {
 public:
-  static constexpr const auto default_version  = "1.0";
+  static constexpr const auto default_version = "1.0";
   static constexpr const auto default_encoding = "UTF-8";
 
-  explicit xml(std::string version  = default_version,
+  explicit xml(std::string version = default_version,
                std::string encoding = default_encoding)
-      : elementBuilder({{"version", std::move(version)},
-                        {"encoding", std::move(encoding)}})
+      : element_builder({{"version", std::move(version)},
+                         {"encoding", std::move(encoding)}})
   {
   }
 };
 
 using transparent =
-    elementBuilder<tag<"transparent">, element::Type::Transparent>;
+    element_builder<tag<"transparent">, element::Type::Transparent>;
 
 template<typename P, typename T>
 concept procedure = requires { requires(std::invocable<P, const T&>); };
@@ -58,8 +59,7 @@ transparent transform(const R& range,
   std::vector<element> res;
 
   res.reserve(std::size(range));
-  for (const auto& elem : range)
-  {
+  for (const auto& elem : range) {
     res.emplace_back(proc(elem));
   }
 
