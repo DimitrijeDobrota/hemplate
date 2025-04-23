@@ -1,16 +1,16 @@
 #pragma once
 
+#include <format>
 #include <string>
 #include <utility>
 #include <vector>
 
 #include "hemplate/hemplate_export.hpp"
-#include "hemplate/streamable.hpp"
 
 namespace hemplate
 {
 
-class HEMPLATE_EXPORT attribute : public streamable<attribute>
+class HEMPLATE_EXPORT attribute
 {
 public:
   attribute(std::string name)  // NOLINT
@@ -45,7 +45,7 @@ private:
   std::string m_value;
 };
 
-class HEMPLATE_EXPORT attribute_list : public streamable<attribute_list>
+class HEMPLATE_EXPORT attribute_list
 {
 public:
   attribute_list() = default;
@@ -93,5 +93,31 @@ private:
 
 }  // namespace hemplate
 
-CUSTOM_FORMAT(hemplate::attribute)
-CUSTOM_FORMAT(hemplate::attribute_list)
+template<>
+struct std::formatter<hemplate::attribute>
+{
+  static constexpr auto parse(std::format_parse_context& ctx)
+  {
+    return ctx.begin();
+  }
+
+  static auto format(const hemplate::attribute& type, std::format_context& ctx)
+  {
+    return std::format_to(ctx.out(), "{}", static_cast<std::string>(type));
+  }
+};
+
+template<>
+struct std::formatter<hemplate::attribute_list>
+{
+  static constexpr auto parse(std::format_parse_context& ctx)
+  {
+    return ctx.begin();
+  }
+
+  static auto format(const hemplate::attribute_list& type,
+                     std::format_context& ctx)
+  {
+    return std::format_to(ctx.out(), "{}", static_cast<std::string>(type));
+  }
+};
