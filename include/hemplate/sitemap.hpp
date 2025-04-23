@@ -1,11 +1,13 @@
 #pragma once
 
 #include "hemplate/classes.hpp"
+#include "hemplate/hemplate_export.hpp"
 
 namespace hemplate::sitemap
 {
 
-class urlset : public element_builder<tag<"urlset">, element::Type::Boolean>
+class HEMPLATE_EXPORT urlset
+    : public element_builder<tag<"urlset">, element::Type::Boolean>
 {
 public:
   static constexpr const auto default_xmlns =

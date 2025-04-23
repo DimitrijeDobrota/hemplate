@@ -1,6 +1,7 @@
 #pragma once
 
 #include "hemplate/classes.hpp"
+#include "hemplate/hemplate_export.hpp"
 
 namespace hemplate::rss
 {
@@ -8,7 +9,8 @@ namespace hemplate::rss
 std::string format_time(std::int64_t sec);
 std::string format_time_now();
 
-class rss : public element_builder<tag<"rss">, element::Type::Boolean>
+class HEMPLATE_EXPORT rss
+    : public element_builder<tag<"rss">, element::Type::Boolean>
 {
 public:
   static constexpr const auto default_version = "2.0";
@@ -43,7 +45,7 @@ public:
   }
 };
 
-class atomLink  // NOLINT *-identifier-naming
+class HEMPLATE_EXPORT atomLink  // NOLINT *-identifier-naming
     : public element_builder<tag<"atom:link">, element::Type::Boolean>
 {
 public:

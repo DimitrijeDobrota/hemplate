@@ -1,7 +1,9 @@
 #pragma once
 
 #include <array>
-#include <cstdint>
+
+#include <based/string.hpp>
+#include <based/type_traits.hpp>
 
 #include "hemplate/element.hpp"
 #include "hemplate/hemplate_export.hpp"
@@ -9,30 +11,17 @@
 namespace hemplate
 {
 
-template<std::size_t N>
-struct string_literal
-{
-  // NOLINTNEXTLINE
-  constexpr string_literal(const char (&str)[N])
-      : m_value(std::to_array(str))
-  {
-  }
-
-  constexpr std::size_t size() const { return N; }
-  constexpr const char* data() const { return m_value.data(); }
-
-  std::array<char, N> m_value;
-};
-
-template<string_literal Name>
+template<based::string_literal Name>
 struct tag
 {
-  static char const* get_name() { return Name.data(); }
+  static auto get_name() { return Name.data(); }
+  static auto get_size() { return Name.size(); }
 };
 
 using comment = element_builder<tag<"comment">, element::Type::Comment>;
 
-class xml : public element_builder<tag<"xml">, element::Type::Xml>
+class HEMPLATE_EXPORT xml
+    : public element_builder<tag<"xml">, element::Type::Xml>
 {
 public:
   static constexpr const auto default_version = "1.0";
@@ -49,12 +38,9 @@ public:
 using transparent =
     element_builder<tag<"transparent">, element::Type::Transparent>;
 
-template<typename P, typename T>
-concept procedure = requires { requires(std::invocable<P, const T&>); };
-
 template<std::ranges::forward_range R>
 transparent transform(const R& range,
-                      procedure<std::ranges::range_value_t<R>> auto proc)
+                      based::Procedure<std::ranges::range_value_t<R>> auto proc)
 {
   std::vector<element> res;
 

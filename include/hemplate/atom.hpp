@@ -1,6 +1,7 @@
 #pragma once
 
 #include "hemplate/classes.hpp"
+#include "hemplate/hemplate_export.hpp"
 
 namespace hemplate::atom
 {
@@ -8,7 +9,8 @@ namespace hemplate::atom
 std::string format_time(std::int64_t sec);
 std::string format_time_now();
 
-class feed : public element_builder<tag<"feed">, element::Type::Boolean>
+class HEMPLATE_EXPORT feed
+    : public element_builder<tag<"feed">, element::Type::Boolean>
 {
 public:
   static constexpr const auto default_xmlns = "http://www.w3.org/2005/Atom";
