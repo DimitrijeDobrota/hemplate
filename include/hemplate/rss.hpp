@@ -33,22 +33,8 @@ public:
   {
   }
 
-  explicit rss(
-      std::string_view version,
-      std::string_view xmlns,
-      std::span<const element> children
-  )
-      : element_builder(attributes(version, xmlns), children)
-  {
-  }
-
   explicit rss(const is_element auto&... children)
       : rss(default_version, default_xmlns, children...)
-  {
-  }
-
-  explicit rss(std::span<const element> children)
-      : rss(default_version, default_xmlns, children)
   {
   }
 };
@@ -84,10 +70,9 @@ public:
   explicit atomLink(
       std::string_view rel,
       std::string_view type,
-      attribute_list attrs,
-      std::span<const element> children
+      const is_element auto&... children
   )
-      : element_builder(attributes(attrs, rel, type), children)
+      : atomLink(rel, type, {}, children...)
   {
   }
 
@@ -96,26 +81,16 @@ public:
   {
   }
 
-  explicit atomLink(attribute_list attrs, std::span<const element> children)
-      : atomLink(default_rel, default_type, std::move(attrs), children)
-  {
-  }
-
   explicit atomLink(const is_element auto&... children)
       : atomLink({}, children...)
   {
   }
-
-  explicit atomLink(std::span<const element> children)
-      : atomLink({}, children)
-  {
-  }
 };
 
+using hemplate::blank;
 using hemplate::comment;
 using hemplate::element;
 using hemplate::transform;
-using hemplate::transparent;
 using hemplate::xml;
 
 // clang-format off

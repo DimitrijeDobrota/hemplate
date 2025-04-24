@@ -18,102 +18,64 @@ class element;
 template<typename T>
 concept is_element = std::derived_from<T, element>;
 
-class HEMPLATE_EXPORT element : public attribute_list
+class HEMPLATE_EXPORT element
 {
 public:
   enum class Type : uint8_t
   {
     Atomic,
     Boolean,
-    Comment,
-    Special,
-    Transparent,
   };
 
-  const attribute_list& attributes() const { return *this; }
-
 private:
-  template<based::string_literal Tag, element::Type MyType>
-  friend class element_builder;
-
-  Type m_type;
-  std::string m_tag;
+  std::string m_otag;
+  std::string m_ctag;
 
   std::vector<element> m_children;
   std::string m_data;
 
-  explicit element(
-      Type type, std::string_view tag, const is_element auto&... children
-  )
-      : m_type(type)
-      , m_tag(tag)
-      , m_children(std::initializer_list<element> {children...})
-  {
-  }
-
-  explicit element(Type type, std::string_view tag, std::string_view data)
-      : m_type(type)
-      , m_tag(tag)
-      , m_data(data)
-  {
-  }
-
-  explicit element(
-      Type type, std::string_view tag, std::span<const element> children
-  )
-      : m_type(type)
-      , m_tag(tag)
-      , m_children(children.begin(), children.end())
-  {
-  }
-
-  explicit element(
-      Type type,
-      std::string_view tag,
-      attribute_list attributes,
-      const is_element auto&... children
-  )
-      : attribute_list(std::move(attributes))
-      , m_type(type)
-      , m_tag(tag)
-      , m_children(std::initializer_list<element> {children...})
-  {
-  }
-
-  explicit element(
-      Type type,
-      std::string_view tag,
-      attribute_list attributes,
-      std::string_view data
-  )
-      : attribute_list(std::move(attributes))
-      , m_type(type)
-      , m_tag(tag)
-      , m_data(data)
-  {
-  }
-
-  explicit element(
-      Type type,
-      std::string_view tag,
-      attribute_list attributes,
-      std::span<const element> children
-  )
-      : attribute_list(std::move(attributes))
-      , m_type(type)
-      , m_tag(tag)
-      , m_children(children.begin(), children.end())
-  {
-  }
-
-  void render_atomic(std::ostream& out, std::size_t indent_value) const;
-  void render_boolean(std::ostream& out, std::size_t indent_value) const;
-  void render_comment(std::ostream& out, std::size_t indent_value) const;
-  void render_special(std::ostream& out, std::size_t indent_value) const;
   void render_children(std::ostream& out, std::size_t indent_value) const;
   void render(std::ostream& out, std::size_t indent_value) const;
 
 public:
+  explicit element(std::string_view open_tag)
+      : m_otag(open_tag)
+  {
+  }
+
+  explicit element(
+      std::string_view open_tag,
+      std::string_view close_tag,
+      std::string_view data
+  )
+      : m_otag(open_tag)
+      , m_ctag(close_tag)
+      , m_data(data)
+  {
+  }
+
+  explicit element(
+      std::string_view open_tag,
+      std::string_view close_tag,
+      const is_element auto&... children
+  )
+      : m_otag(open_tag)
+      , m_ctag(close_tag)
+      , m_children(std::initializer_list<element> {children...})
+  {
+  }
+
+  explicit element(
+      std::string_view open_tag,
+      std::string_view close_tag,
+      std::span<const element> children
+  )
+      : m_otag(open_tag)
+      , m_ctag(close_tag)
+      , m_children(std::begin(children), std::end(children))
+  {
+  }
+
   explicit operator std::string() const
   {
     std::stringstream ss;
@@ -129,24 +91,89 @@ public:
 };
 
 template<based::string_literal Tag, element::Type MyType>
-class HEMPLATE_EXPORT element_builder : public element
+class element_builder;
+
+template<based::string_literal Tag>
+class HEMPLATE_EXPORT element_builder<Tag, element::Type::Boolean>
+    : public element
 {
+  static auto close() { return std::format("</{}>", Tag.data()); }
+  static auto open(const attribute_list& attrs = {})
+  {
+    return attrs.empty() ? std::format("<{}>", Tag.data())
+                         : std::format("<{} {}>", Tag.data(), attrs);
+  }
+
 public:
-  // NOLINTBEGIN *-no-array-decay
-  template<typename... Args>
-  explicit element_builder(Args&&... args)
-      : element(MyType, Tag.data(), std::forward<Args>(args)...)
+  explicit element_builder(std::string_view data)
+      : element(open(), close(), data)
   {
   }
 
-  template<typename... Args>
-  explicit element_builder(attribute_list list, Args&&... args)
-      : element(
-            MyType, Tag.data(), std::move(list), std::forward<Args>(args)...
-        )
+  explicit element_builder(const is_element auto&... children)
+      : element(open(), close(), children...)
   {
   }
-  // NOLINTEND *-no-array-decay
+
+  explicit element_builder(std::span<const element> children)
+      : element(open(), close(), children)
+  {
+  }
+
+  explicit element_builder(const attribute_list& attrs, std::string_view data)
+      : element(open(attrs), close(), data)
+  {
+  }
+
+  explicit element_builder(
+      const attribute_list& attrs, const is_element auto&... children
+  )
+      : element(open(attrs), close(), children...)
+  {
+  }
+
+  explicit element_builder(
+      const attribute_list& attrs, std::span<const element> children
+  )
+      : element(open(attrs), close(), children)
+  {
+  }
+};
+
+template<based::string_literal Tag>
+class HEMPLATE_EXPORT element_builder<Tag, element::Type::Atomic>
+    : public element
+{
+  static auto open(const attribute_list& attrs = {})
+  {
+    return attrs.empty() ? std::format("<{} />", Tag.data())
+                         : std::format("<{} {} />", Tag.data(), attrs);
+  }
+
+public:
+  explicit element_builder(const attribute_list& list = {})
+      : element(open(list))
+  {
+  }
+};
+
+class HEMPLATE_EXPORT blank : public element
+{
+public:
+  explicit blank(std::string_view data)
+      : element("", "", data)
+  {
+  }
+
+  explicit blank(const is_element auto&... children)
+      : element("", "", children...)
+  {
+  }
+
+  explicit blank(std::span<const element> children)
+      : element("", "", children)
+  {
+  }
 };
 
 }  // namespace hemplate

@@ -56,6 +56,11 @@ public:
   void set(const attribute_list& list);
   void set(attribute attr);
 
+  bool empty() const
+  {
+    return m_attributes.empty() && m_class.empty() && m_style.empty();
+  }
+
   explicit operator std::string() const
   {
     std::string res;
@@ -89,20 +94,6 @@ private:
 };
 
 }  // namespace hemplate
-
-template<>
-struct std::formatter<hemplate::attribute>
-{
-  static constexpr auto parse(std::format_parse_context& ctx)
-  {
-    return ctx.begin();
-  }
-
-  static auto format(const hemplate::attribute& type, std::format_context& ctx)
-  {
-    return std::format_to(ctx.out(), "{}", static_cast<std::string>(type));
-  }
-};
 
 template<>
 struct std::formatter<hemplate::attribute_list>

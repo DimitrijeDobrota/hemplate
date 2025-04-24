@@ -27,26 +27,16 @@ public:
   {
   }
 
-  explicit feed(std::string_view xmlns, std::span<const element> children)
-      : element_builder(attributes(xmlns), children)
-  {
-  }
-
   explicit feed(const is_element auto&... children)
       : feed(default_xmlns, children...)
   {
   }
-
-  explicit feed(std::span<const element> children)
-      : feed(default_xmlns, children)
-  {
-  }
 };
 
+using hemplate::blank;
 using hemplate::comment;
 using hemplate::element;
 using hemplate::transform;
-using hemplate::transparent;
 using hemplate::xml;
 
 // clang-format off

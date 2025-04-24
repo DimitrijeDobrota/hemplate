@@ -5,17 +5,17 @@
 namespace hemplate::html
 {
 
+using hemplate::blank;
 using hemplate::comment;
 using hemplate::element;
 using hemplate::transform;
-using hemplate::transparent;
 using hemplate::xml;
 
-class doctype : public element_builder<"DOCTYPE", element::Type::Special>
+class doctype : public element
 {
 public:
   explicit doctype()
-      : element_builder("!DOCTYPE html")
+      : element("<!DOCTYPE html>", "", "")
   {
   }
 };

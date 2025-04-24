@@ -11,11 +11,16 @@
 namespace hemplate
 {
 
-using comment = element_builder<"comment", element::Type::Comment>;
-using transparent = element_builder<"transparent", element::Type::Transparent>;
+class HEMPLATE_EXPORT comment : public element
+{
+public:
+  explicit comment(std::string_view data)
+      : element(std::format("<-- {} -->", data), "", "")
+  {
+  }
+};
 
-class HEMPLATE_EXPORT xml
-    : public element_builder<"xml", element::Type::Special>
+class HEMPLATE_EXPORT xml : public element
 {
 public:
   static constexpr const auto default_version = "1.0";
@@ -31,13 +36,15 @@ public:
       std::string_view version = default_version,
       std::string_view encoding = default_encoding
   )
-      : element_builder(data(version, encoding))
+      : element(
+            std::format("<? {}?>", attribute_list {version, encoding}), "", ""
+        )
   {
   }
 };
 
 template<std::ranges::forward_range R>
-transparent transform(
+blank transform(
     const R& range, based::Procedure<std::ranges::range_value_t<R>> auto proc
 )
 {
@@ -48,6 +55,7 @@ transparent transform(
     res.emplace_back(proc(elem));
   }
 
-  return transparent {res};
+  return blank {res};
 }
+
 }  // namespace hemplate

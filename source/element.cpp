@@ -1,4 +1,3 @@
-#include <format>
 #include <ostream>
 #include <string>
 
@@ -6,24 +5,6 @@
 
 namespace hemplate
 {
-
-void element::render_comment(std::ostream& out, std::size_t indent_value) const
-{
-  const std::string indent(indent_value, ' ');
-  out << indent << "<!-- " << m_data << " -->\n";
-}
-
-void element::render_atomic(std::ostream& out, std::size_t indent_value) const
-{
-  const std::string indent(indent_value, ' ');
-  out << indent << std::format("<{} {}/>\n", m_tag, attributes());
-}
-
-void element::render_special(std::ostream& out, std::size_t indent_value) const
-{
-  const std::string indent(indent_value, ' ');
-  out << indent << std::format("<{}>\n", m_data);
-}
 
 void element::render_children(std::ostream& out, std::size_t indent_value) const
 {
@@ -36,49 +17,33 @@ void element::render(std::ostream& out, std::size_t indent_value) const
 {
   const std::string indent(indent_value, ' ');
 
-  switch (m_type) {
-    case Type::Atomic:
-      render_atomic(out, indent_value);
-      return;
-    case Type::Comment:
-      render_comment(out, indent_value);
-      return;
-    case Type::Special:
-      render_special(out, indent_value);
-      return;
-    case Type::Transparent:
+  if (m_otag.empty()) {
+    if (!m_data.empty()) {
+      out << indent << m_data << '\n';
+    } else {
       render_children(out, indent_value);
-      return;
-    default:
-      break;
+    }
+    return;
   }
 
-  if (m_tag.empty()) {
-    out << indent << m_data << '\n';
+  if (m_ctag.empty()) {
+    out << indent << m_otag << '\n';
     return;
   }
 
   if (!m_data.empty()) {
-    out << indent << std::format("<{} {}>\n", m_tag, attributes());
-
-    if (!m_children.empty()) {
-      render_children(out, indent_value + 2);
-    } else {
-      out << indent << "  " << m_data << '\n';
-    }
-
-    out << indent << std::format("</{}>\n", m_tag);
+    out << indent << m_otag << m_data << m_ctag << '\n';
     return;
   }
 
   if (!m_children.empty()) {
-    out << indent << std::format("<{} {}>\n", m_tag, attributes());
+    out << indent << m_otag << '\n';
     render_children(out, indent_value + 2);
-    out << indent << std::format("</{}>\n", m_tag);
+    out << m_ctag << '\n';
     return;
   }
 
-  out << indent << std::format("<{0} {1}></{0}>\n", m_tag, attributes());
+  out << indent << m_otag << m_ctag << '\n';
 }
 
 }  // namespace hemplate

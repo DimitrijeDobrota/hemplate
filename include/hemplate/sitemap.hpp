@@ -25,26 +25,16 @@ public:
   {
   }
 
-  explicit urlset(std::string_view xmlns, std::span<const element> children)
-      : element_builder(attributes(xmlns), children)
-  {
-  }
-
   explicit urlset(const is_element auto&... children)
       : urlset(default_xmlns, children...)
   {
   }
-
-  explicit urlset(std::span<const element> children)
-      : urlset(default_xmlns, children)
-  {
-  }
 };
 
+using hemplate::blank;
 using hemplate::comment;
 using hemplate::element;
 using hemplate::transform;
-using hemplate::transparent;
 using hemplate::xml;
 
 // clang-format off

@@ -16,7 +16,7 @@ int main()
   };
 
   std::cout << html::html {
-      comment("Hello this is a comment"),
+      comment {"Hello this is a comment"},
       html::ul {
           ul_attrs,
           html::li {
@@ -28,7 +28,7 @@ int main()
               "Item 2",
           },
       },
-      html::meta(),
+      html::hr {},
   };
 
   return 0;
