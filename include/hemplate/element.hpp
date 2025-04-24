@@ -41,10 +41,12 @@ private:
   std::vector<element> m_children;
   std::string m_data;
 
-  explicit element(bool& state,
-                   Type type,
-                   std::string_view tag,
-                   const is_element auto&... children)
+  explicit element(
+      bool& state,
+      Type type,
+      std::string_view tag,
+      const is_element auto&... children
+  )
       : m_state(&state)
       , m_type(type)
       , m_tag(tag)
@@ -52,10 +54,9 @@ private:
   {
   }
 
-  explicit element(bool& state,
-                   Type type,
-                   std::string_view tag,
-                   std::string_view data)
+  explicit element(
+      bool& state, Type type, std::string_view tag, std::string_view data
+  )
       : m_state(&state)
       , m_type(type)
       , m_tag(tag)
@@ -63,10 +64,12 @@ private:
   {
   }
 
-  explicit element(bool& state,
-                   Type type,
-                   std::string_view tag,
-                   std::span<const element> children)
+  explicit element(
+      bool& state,
+      Type type,
+      std::string_view tag,
+      std::span<const element> children
+  )
       : m_state(&state)
       , m_type(type)
       , m_tag(tag)
@@ -74,11 +77,13 @@ private:
   {
   }
 
-  explicit element(bool& state,
-                   Type type,
-                   std::string_view tag,
-                   attribute_list attributes,
-                   const is_element auto&... children)
+  explicit element(
+      bool& state,
+      Type type,
+      std::string_view tag,
+      attribute_list attributes,
+      const is_element auto&... children
+  )
       : attribute_list(std::move(attributes))
       , m_state(&state)
       , m_type(type)
@@ -87,11 +92,13 @@ private:
   {
   }
 
-  explicit element(bool& state,
-                   Type type,
-                   std::string_view tag,
-                   attribute_list attributes,
-                   std::string_view data)
+  explicit element(
+      bool& state,
+      Type type,
+      std::string_view tag,
+      attribute_list attributes,
+      std::string_view data
+  )
       : attribute_list(std::move(attributes))
       , m_state(&state)
       , m_type(type)
@@ -100,11 +107,13 @@ private:
   {
   }
 
-  explicit element(bool& state,
-                   Type type,
-                   std::string_view tag,
-                   attribute_list attributes,
-                   std::span<const element> children)
+  explicit element(
+      bool& state,
+      Type type,
+      std::string_view tag,
+      attribute_list attributes,
+      std::span<const element> children
+  )
       : attribute_list(std::move(attributes))
       , m_state(&state)
       , m_type(type)
@@ -152,11 +161,13 @@ public:
 
   template<typename... Args>
   explicit element_builder(attribute_list list, Args&&... args)
-      : element(m_state,
-                MyType,
-                Tag.data(),
-                std::move(list),
-                std::forward<Args>(args)...)
+      : element(
+            m_state,
+            MyType,
+            Tag.data(),
+            std::move(list),
+            std::forward<Args>(args)...
+        )
   {
   }
   // NOLINTEND *-no-array-decay

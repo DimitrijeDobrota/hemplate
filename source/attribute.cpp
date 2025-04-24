@@ -26,8 +26,9 @@ attribute_list::attribute_list(attribute attr)
   set(std::move(attr));
 }
 
-attribute_list::attribute_list(attribute_list attrs,
-                               std::initializer_list<attribute> list)
+attribute_list::attribute_list(
+    attribute_list attrs, std::initializer_list<attribute> list
+)
     : attribute_list(std::move(attrs))
 {
   for (const auto& attr : list) {

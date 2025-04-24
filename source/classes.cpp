@@ -13,7 +13,8 @@ auto sec_since_epoch(int64_t sec)
 {
   return std::chrono::time_point_cast<std::chrono::seconds>(
       std::chrono::system_clock::from_time_t(time_t {0})
-      + std::chrono::seconds(sec));
+      + std::chrono::seconds(sec)
+  );
 }
 
 auto get_time_now()

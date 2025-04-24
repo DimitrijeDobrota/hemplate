@@ -112,8 +112,9 @@ struct std::formatter<hemplate::attribute_list>
     return ctx.begin();
   }
 
-  static auto format(const hemplate::attribute_list& type,
-                     std::format_context& ctx)
+  static auto format(
+      const hemplate::attribute_list& type, std::format_context& ctx
+  )
   {
     return std::format_to(ctx.out(), "{}", static_cast<std::string>(type));
   }

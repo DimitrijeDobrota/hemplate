@@ -59,7 +59,8 @@ TEST_CASE("set list", "[attribute_list]")
 
   REQUIRE(
       std::string(attrs)
-      == R"(class="first second" style="first; second" test_first test_second)");
+      == R"(class="first second" style="first; second" test_first test_second)"
+  );
 
   SECTION("set")
   {
@@ -71,7 +72,8 @@ TEST_CASE("set list", "[attribute_list]")
 
     REQUIRE(
         std::string(attrs)
-        == R"(class="first second third" style="first; second; third" test_first test_second test_third)");
+        == R"(class="first second third" style="first; second; third" test_first test_second test_third)"
+    );
   }
 }
 
@@ -81,7 +83,8 @@ TEST_CASE("add", "[attribute_list]")
 
   const auto tmp = hemplate::attribute_list {{"class", "first"}};
   const auto attrs = hemplate::attribute_list {
-      tmp, {{"class"sv, "second"sv}, {"class"sv, "third"sv}}};
+      tmp, {{"class"sv, "second"sv}, {"class"sv, "third"sv}}
+  };
 
   REQUIRE(std::string(attrs) == R"(class="first second third")");
 }

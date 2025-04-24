@@ -20,17 +20,21 @@ public:
   static constexpr const auto default_version = "1.0";
   static constexpr const auto default_encoding = "UTF-8";
 
-  explicit xml(std::string version = default_version,
-               std::string encoding = default_encoding)
-      : element_builder(attribute_list {{"version", std::move(version)},
-                                        {"encoding", std::move(encoding)}})
+  explicit xml(
+      std::string version = default_version,
+      std::string encoding = default_encoding
+  )
+      : element_builder(attribute_list {
+            {"version", std::move(version)}, {"encoding", std::move(encoding)}
+        })
   {
   }
 };
 
 template<std::ranges::forward_range R>
-transparent transform(const R& range,
-                      based::Procedure<std::ranges::range_value_t<R>> auto proc)
+transparent transform(
+    const R& range, based::Procedure<std::ranges::range_value_t<R>> auto proc
+)
 {
   std::vector<element> res;
 

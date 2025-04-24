@@ -24,16 +24,20 @@ public:
   static constexpr const auto default_version = "2.0";
   static constexpr const auto default_xmlns = "http://www.w3.org/2005/Atom";
 
-  explicit rss(std::string_view version,
-               std::string_view xmlns,
-               const is_element auto&... children)
+  explicit rss(
+      std::string_view version,
+      std::string_view xmlns,
+      const is_element auto&... children
+  )
       : element_builder(attributes(version, xmlns), children...)
   {
   }
 
-  explicit rss(std::string_view version,
-               std::string_view xmlns,
-               std::span<const element> children)
+  explicit rss(
+      std::string_view version,
+      std::string_view xmlns,
+      std::span<const element> children
+  )
       : element_builder(attributes(version, xmlns), children)
   {
   }
@@ -52,9 +56,9 @@ public:
 class HEMPLATE_EXPORT atomLink  // NOLINT *-identifier-naming
     : public element_builder<"atom:link", element::Type::Boolean>
 {
-  static auto attributes(attribute_list& list,
-                         std::string_view rel,
-                         std::string_view type)
+  static auto attributes(
+      attribute_list& list, std::string_view rel, std::string_view type
+  )
   {
     list.set({
         {"rel", rel},
@@ -67,18 +71,22 @@ public:
   static constexpr const auto default_rel = "self";
   static constexpr const auto default_type = "application/rss+xml";
 
-  explicit atomLink(std::string_view rel,
-                    std::string_view type,
-                    attribute_list attrs,
-                    const is_element auto&... children)
+  explicit atomLink(
+      std::string_view rel,
+      std::string_view type,
+      attribute_list attrs,
+      const is_element auto&... children
+  )
       : element_builder(attributes(attrs, rel, type), children...)
   {
   }
 
-  explicit atomLink(std::string_view rel,
-                    std::string_view type,
-                    attribute_list attrs,
-                    std::span<const element> children)
+  explicit atomLink(
+      std::string_view rel,
+      std::string_view type,
+      attribute_list attrs,
+      std::span<const element> children
+  )
       : element_builder(attributes(attrs, rel, type), children)
   {
   }
