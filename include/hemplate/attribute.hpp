@@ -51,12 +51,10 @@ public:
 
   attribute_list(std::initializer_list<attribute> list);
   attribute_list(attribute attr);  // NOLINT *-explicit-constructor
+  attribute_list(attribute_list attrs, std::initializer_list<attribute> list);
 
-  attribute_list& set(const attribute_list& list);
-  attribute_list& set(attribute attr);
-
-  attribute_list add(const attribute_list& list) const;
-  attribute_list add(attribute attr) const;
+  void set(const attribute_list& list);
+  void set(attribute attr);
 
   explicit operator std::string() const
   {

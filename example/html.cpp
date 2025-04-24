@@ -20,11 +20,11 @@ int main()
       html::ul {
           ul_attrs,
           html::li {
-              li_attrs.add({"class", "item1"}),
+              {li_attrs, {{"class", "item1"}}},
               "Item 1",
           },
           html::li {
-              li_attrs.add({"class", "item2"}),
+              {li_attrs, {{"class", "item2"}}},
               "Item 2",
           },
       },

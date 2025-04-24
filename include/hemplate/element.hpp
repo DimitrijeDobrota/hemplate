@@ -140,15 +140,26 @@ public:
 template<based::string_literal Tag, element::Type MyType>
 class HEMPLATE_EXPORT element_builder : public element
 {
-  static bool m_state;  // NOLINT
+  static bool m_state;
 
 public:
+  // NOLINTBEGIN *-no-array-decay
   template<typename... Args>
   explicit element_builder(Args&&... args)
-      // NOLINTNEXTLINE *-no-array-decay
       : element(m_state, MyType, Tag.data(), std::forward<Args>(args)...)
   {
   }
+
+  template<typename... Args>
+  explicit element_builder(attribute_list list, Args&&... args)
+      : element(m_state,
+                MyType,
+                Tag.data(),
+                std::move(list),
+                std::forward<Args>(args)...)
+  {
+  }
+  // NOLINTEND *-no-array-decay
 };
 
 template<based::string_literal Tag, element::Type Type>

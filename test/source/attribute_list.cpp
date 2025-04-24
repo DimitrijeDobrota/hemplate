@@ -79,12 +79,9 @@ TEST_CASE("add", "[attribute_list]")
 {
   using namespace std::literals::string_view_literals;
 
-  const auto attrs = hemplate::attribute_list {}
-                         .add({"class", "first"})
-                         .add({
-                             {"class"sv, "second"sv},
-                             {"class"sv, "third"sv},
-                         });
+  const auto tmp = hemplate::attribute_list {{"class", "first"}};
+  const auto attrs = hemplate::attribute_list {
+      tmp, {{"class"sv, "second"sv}, {"class"sv, "third"sv}}};
 
   REQUIRE(std::string(attrs) == R"(class="first second third")");
 }

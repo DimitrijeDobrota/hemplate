@@ -56,10 +56,11 @@ class HEMPLATE_EXPORT atomLink  // NOLINT *-identifier-naming
                          std::string_view rel,
                          std::string_view type)
   {
-    return list.set({
+    list.set({
         {"rel", rel},
         {"type", type},
     });
+    return list;
   }
 
 public:
