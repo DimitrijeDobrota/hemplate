@@ -10,21 +10,19 @@ namespace hemplate
 void element::render_comment(std::ostream& out, std::size_t indent_value) const
 {
   const std::string indent(indent_value, ' ');
-
   out << indent << "<!-- " << m_data << " -->\n";
 }
 
 void element::render_atomic(std::ostream& out, std::size_t indent_value) const
 {
   const std::string indent(indent_value, ' ');
-
   out << indent << std::format("<{} {}/>\n", m_tag, attributes());
 }
 
-void element::render_xml(std::ostream& out, std::size_t indent_value) const
+void element::render_special(std::ostream& out, std::size_t indent_value) const
 {
   const std::string indent(indent_value, ' ');
-  out << indent << std::format("<?xml {}?>\n", attributes());
+  out << indent << std::format("<{}>\n", m_data);
 }
 
 void element::render_children(std::ostream& out, std::size_t indent_value) const
@@ -45,8 +43,8 @@ void element::render(std::ostream& out, std::size_t indent_value) const
     case Type::Comment:
       render_comment(out, indent_value);
       return;
-    case Type::Xml:
-      render_xml(out, indent_value);
+    case Type::Special:
+      render_special(out, indent_value);
       return;
     case Type::Transparent:
       render_children(out, indent_value);
@@ -73,17 +71,14 @@ void element::render(std::ostream& out, std::size_t indent_value) const
     return;
   }
 
-  if (m_children.empty()) {
-    if (tgl_state()) {
-      out << indent << std::format("<{} {}>\n", m_tag, attributes());
-    } else {
-      out << indent << std::format("</{}>\n", m_tag);
-    }
-  } else {
+  if (!m_children.empty()) {
     out << indent << std::format("<{} {}>\n", m_tag, attributes());
     render_children(out, indent_value + 2);
     out << indent << std::format("</{}>\n", m_tag);
+    return;
   }
+
+  out << indent << std::format("<{0} {1}></{0}>\n", m_tag, attributes());
 }
 
 }  // namespace hemplate

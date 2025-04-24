@@ -14,19 +14,24 @@ namespace hemplate
 using comment = element_builder<"comment", element::Type::Comment>;
 using transparent = element_builder<"transparent", element::Type::Transparent>;
 
-class HEMPLATE_EXPORT xml : public element_builder<"xml", element::Type::Xml>
+class HEMPLATE_EXPORT xml
+    : public element_builder<"xml", element::Type::Special>
 {
 public:
   static constexpr const auto default_version = "1.0";
   static constexpr const auto default_encoding = "UTF-8";
 
+  static auto data(std::string_view version, std::string_view encoding)
+  {
+    const attribute_list attrs {{"version", version}, {"encoding", encoding}};
+    return "?xml " + std::string(attrs) + "?";
+  }
+
   explicit xml(
-      std::string version = default_version,
-      std::string encoding = default_encoding
+      std::string_view version = default_version,
+      std::string_view encoding = default_encoding
   )
-      : element_builder(attribute_list {
-            {"version", std::move(version)}, {"encoding", std::move(encoding)}
-        })
+      : element_builder(data(version, encoding))
   {
   }
 };

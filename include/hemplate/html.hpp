@@ -11,6 +11,15 @@ using hemplate::transform;
 using hemplate::transparent;
 using hemplate::xml;
 
+class doctype : public element_builder<"DOCTYPE", element::Type::Special>
+{
+public:
+  explicit doctype()
+      : element_builder("!DOCTYPE html")
+  {
+  }
+};
+
 // clang-format off
 // NOLINTBEGIN *-identifier-naming
 using abbr       = element_builder<"abbr", element::Type::Boolean>;
@@ -43,7 +52,6 @@ using dfn        = element_builder<"dfn", element::Type::Boolean>;
 using dialog     = element_builder<"dialog", element::Type::Boolean>;
 using div        = element_builder<"div", element::Type::Boolean>;
 using dl         = element_builder<"dl", element::Type::Boolean>;
-using doctype    = element_builder<"!DOCTYPE html", element::Type::Atomic>;
 using dt         = element_builder<"dt", element::Type::Boolean>;
 using embed      = element_builder<"embed", element::Type::Atomic>;
 using em         = element_builder<"em", element::Type::Boolean>;
