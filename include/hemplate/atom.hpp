@@ -9,8 +9,7 @@ namespace hemplate::atom
 std::string format_time(std::int64_t sec);
 std::string format_time_now();
 
-class HEMPLATE_EXPORT feed
-    : public element_builder<"feed", element::Type::Boolean>
+class HEMPLATE_EXPORT feed : public element_boolean<"feed">
 {
   static auto attributes(std::string_view xmlns)
   {
@@ -40,32 +39,31 @@ using hemplate::xml;
 
 // clang-format off
 // NOLINTBEGIN *-identifier-naming
-using author        = element_builder<"author", element::Type::Boolean>;
-using category      = element_builder<"category", element::Type::Boolean>;
-using content       = element_builder<"content", element::Type::Boolean>;
-using contributor   = element_builder<"contributor", element::Type::Boolean>;
-using div           = element_builder<"div", element::Type::Boolean>;
-using email         = element_builder<"email", element::Type::Boolean>;
-using entry         = element_builder<"entry", element::Type::Boolean>;
-using generator     = element_builder<"generator", element::Type::Boolean>;
-using icon          = element_builder<"icon", element::Type::Boolean>;
-using id            = element_builder<"id", element::Type::Boolean>;
-using intervalBlock = element_builder<"intervalBlock", element::Type::Boolean>;
-using link          = element_builder<"link", element::Type::Boolean>;
-using logo          = element_builder<"logo", element::Type::Boolean>;
-using meterReading  = element_builder<"meterReading", element::Type::Boolean>;
-using name          = element_builder<"name", element::Type::Boolean>;
-using published     = element_builder<"published", element::Type::Boolean>;
-using readingType   = element_builder<"readingType", element::Type::Boolean>;
-using rights        = element_builder<"rights", element::Type::Boolean>;
-using source        = element_builder<"source", element::Type::Boolean>;
-using subtitle      = element_builder<"subtitle", element::Type::Boolean>;
-using summary       = element_builder<"summary", element::Type::Boolean>;
-using text          = element_builder<"", element::Type::Boolean>;
-using title         = element_builder<"title", element::Type::Boolean>;
-using updated       = element_builder<"updated", element::Type::Boolean>;
-using uri           = element_builder<"uri", element::Type::Boolean>;
-using usagePoint    = element_builder<"usagePoint", element::Type::Boolean>;
+using author        = element_boolean<"author">;
+using category      = element_boolean<"category">;
+using content       = element_boolean<"content">;
+using contributor   = element_boolean<"contributor">;
+using div           = element_boolean<"div">;
+using email         = element_boolean<"email">;
+using entry         = element_boolean<"entry">;
+using generator     = element_boolean<"generator">;
+using icon          = element_boolean<"icon">;
+using id            = element_boolean<"id">;
+using intervalBlock = element_boolean<"intervalBlock">;
+using link          = element_boolean<"link">;
+using logo          = element_boolean<"logo">;
+using meterReading  = element_boolean<"meterReading">;
+using name          = element_boolean<"name">;
+using published     = element_boolean<"published">;
+using readingType   = element_boolean<"readingType">;
+using rights        = element_boolean<"rights">;
+using source        = element_boolean<"source">;
+using subtitle      = element_boolean<"subtitle">;
+using summary       = element_boolean<"summary">;
+using title         = element_boolean<"title">;
+using updated       = element_boolean<"updated">;
+using uri           = element_boolean<"uri">;
+using usagePoint    = element_boolean<"usagePoint">;
 // NOLINTEND *-identifier-naming
 // clang-format on
 

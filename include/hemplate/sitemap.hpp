@@ -6,8 +6,7 @@
 namespace hemplate::sitemap
 {
 
-class HEMPLATE_EXPORT urlset
-    : public element_builder<"urlset", element::Type::Boolean>
+class HEMPLATE_EXPORT urlset : public element_boolean<"urlset">
 {
   static auto attributes(std::string_view xmlns)
   {
@@ -38,11 +37,11 @@ using hemplate::xml;
 
 // clang-format off
 // NOLINTBEGIN *-identifier-naming
-using changefreq = element_builder<"changefreq", element::Type::Boolean>;
-using lastmod    = element_builder<"lastmod", element::Type::Boolean>;
-using loc        = element_builder<"loc", element::Type::Boolean>;
-using url        = element_builder<"url", element::Type::Boolean>;
-using priority   = element_builder<"priority", element::Type::Boolean>;
+using changefreq = element_boolean<"changefreq">;
+using lastmod    = element_boolean<"lastmod">;
+using loc        = element_boolean<"loc">;
+using url        = element_boolean<"url">;
+using priority   = element_boolean<"priority">;
 // NOLINTEND *-identifier-naming
 // clang-format on
 

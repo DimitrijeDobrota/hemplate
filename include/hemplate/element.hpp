@@ -134,6 +134,9 @@ public:
 };
 
 template<based::string_literal Tag>
+using element_boolean = element_builder<Tag, element::Type::Boolean>;
+
+template<based::string_literal Tag>
 class HEMPLATE_EXPORT element_builder<Tag, element::Type::Atomic>
     : public element
 {
@@ -149,5 +152,8 @@ public:
   {
   }
 };
+
+template<based::string_literal Tag>
+using element_atomic = element_builder<Tag, element::Type::Atomic>;
 
 }  // namespace hemplate

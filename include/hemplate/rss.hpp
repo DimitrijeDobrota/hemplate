@@ -9,8 +9,7 @@ namespace hemplate::rss
 std::string format_time(std::int64_t sec);
 std::string format_time_now();
 
-class HEMPLATE_EXPORT rss
-    : public element_builder<"rss", element::Type::Boolean>
+class HEMPLATE_EXPORT rss : public element_boolean<"rss">
 {
   static auto attributes(std::string_view version, std::string_view xmlns)
   {
@@ -40,7 +39,7 @@ public:
 };
 
 class HEMPLATE_EXPORT atomLink  // NOLINT *-identifier-naming
-    : public element_builder<"atom:link", element::Type::Boolean>
+    : public element_boolean<"atom:link">
 {
   static auto attributes(
       attribute_list& list, std::string_view rel, std::string_view type
@@ -94,37 +93,37 @@ using hemplate::xml;
 
 // clang-format off
 // NOLINTBEGIN *-identifier-naming
-using author         = element_builder<"author", element::Type::Boolean>;
-using category       = element_builder<"category", element::Type::Boolean>;
-using channel        = element_builder<"channel", element::Type::Boolean>;
-using cloud          = element_builder<"cloud", element::Type::Atomic>;
-using comments       = element_builder<"comments", element::Type::Boolean>;
-using copyright      = element_builder<"copyright", element::Type::Boolean>;
-using description    = element_builder<"description", element::Type::Boolean>;
-using docs           = element_builder<"docs", element::Type::Boolean>;
-using enclosure      = element_builder<"enclosure", element::Type::Atomic>;
-using generator      = element_builder<"generator", element::Type::Boolean>;
-using guid           = element_builder<"guid", element::Type::Boolean>;
-using height         = element_builder<"height", element::Type::Boolean>;
-using image          = element_builder<"image", element::Type::Boolean>;
-using item           = element_builder<"item", element::Type::Boolean>;
-using language       = element_builder<"language", element::Type::Boolean>;
-using lastBuildDate  = element_builder<"lastBuildDate", element::Type::Boolean>;
-using link           = element_builder<"link", element::Type::Boolean>;
-using managingEditor = element_builder<"managingEditor", element::Type::Boolean>;
-using name           = element_builder<"name", element::Type::Boolean>;
-using pubDate        = element_builder<"pubDate", element::Type::Boolean>;
-using rating         = element_builder<"rating", element::Type::Boolean>;
-using skipDays       = element_builder<"skipDays", element::Type::Boolean>;
-using skipHours      = element_builder<"skipHours", element::Type::Boolean>;
-using source         = element_builder<"source", element::Type::Boolean>;
-using text           = element_builder<"", element::Type::Boolean>;
-using textinput      = element_builder<"textinput", element::Type::Boolean>;
-using title          = element_builder<"title", element::Type::Boolean>;
-using ttl            = element_builder<"ttl", element::Type::Boolean>;
-using url            = element_builder<"url", element::Type::Boolean>;
-using webMaster      = element_builder<"webMaster", element::Type::Boolean>;
-using width          = element_builder<"width", element::Type::Boolean>;
+using author         = element_boolean<"author">;
+using category       = element_boolean<"category">;
+using channel        = element_boolean<"channel">;
+using comments       = element_boolean<"comments">;
+using copyright      = element_boolean<"copyright">;
+using description    = element_boolean<"description">;
+using docs           = element_boolean<"docs">;
+using generator      = element_boolean<"generator">;
+using guid           = element_boolean<"guid">;
+using height         = element_boolean<"height">;
+using image          = element_boolean<"image">;
+using item           = element_boolean<"item">;
+using language       = element_boolean<"language">;
+using lastBuildDate  = element_boolean<"lastBuildDate">;
+using link           = element_boolean<"link">;
+using managingEditor = element_boolean<"managingEditor">;
+using name           = element_boolean<"name">;
+using pubDate        = element_boolean<"pubDate">;
+using rating         = element_boolean<"rating">;
+using skipDays       = element_boolean<"skipDays">;
+using skipHours      = element_boolean<"skipHours">;
+using source         = element_boolean<"source">;
+using textinput      = element_boolean<"textinput">;
+using title          = element_boolean<"title">;
+using ttl            = element_boolean<"ttl">;
+using url            = element_boolean<"url">;
+using webMaster      = element_boolean<"webMaster">;
+using width          = element_boolean<"width">;
+
+using cloud          = element_atomic<"cloud">;
+using enclosure      = element_atomic<"enclosure">;
 // NOLINTEND *-identifier-naming
 // clang-format on
 
