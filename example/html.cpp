@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 
 #include "hemplate/html.hpp"
 
@@ -14,6 +15,8 @@ int main()
       {"class", "home_ul"},
       {"style", "margin-bottom: 1em"},
   };
+
+  const std::vector<html::b> vec = {html::b("1"), html::b("2"), html::b("3")};
 
   std::cout << html::html {
       comment {"Hello this is a comment"},

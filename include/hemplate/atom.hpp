@@ -21,13 +21,15 @@ class HEMPLATE_EXPORT feed : public element_boolean<"feed">
 public:
   static constexpr const auto default_xmlns = "http://www.w3.org/2005/Atom";
 
-  explicit feed(std::string_view xmlns, const is_element auto&... children)
-      : element_builder(attributes(xmlns), children...)
+  template<typename... Args>
+  explicit feed(std::string_view xmlns, Args&&... args)
+      : element_builder(attributes(xmlns), std::forward<Args>(args)...)
   {
   }
 
-  explicit feed(const is_element auto&... children)
-      : feed(default_xmlns, children...)
+  template<typename... Args>
+  explicit feed(Args&&... args)
+      : element_builder(attributes(default_xmlns), std::forward<Args>(args)...)
   {
   }
 };

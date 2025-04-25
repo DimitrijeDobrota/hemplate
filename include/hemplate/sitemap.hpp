@@ -19,13 +19,15 @@ public:
   static constexpr const auto default_xmlns =
       "http://www.sitemaps.org/schemas/sitemap/0.9";
 
-  explicit urlset(std::string_view xmlns, const is_element auto&... children)
-      : element_builder(attributes(xmlns), children...)
+  template<typename... Args>
+  explicit urlset(std::string_view xmlns, Args&&... args)
+      : element_builder(attributes(xmlns), std::forward<Args>(args)...)
   {
   }
 
-  explicit urlset(const is_element auto&... children)
-      : urlset(default_xmlns, children...)
+  template<typename... Args>
+  explicit urlset(Args&&... args)
+      : urlset(default_xmlns, std::forward<Args>(args)...)
   {
   }
 };

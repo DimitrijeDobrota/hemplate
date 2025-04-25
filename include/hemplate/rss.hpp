@@ -23,17 +23,18 @@ public:
   static constexpr const auto default_version = "2.0";
   static constexpr const auto default_xmlns = "http://www.w3.org/2005/Atom";
 
-  explicit rss(
-      std::string_view version,
-      std::string_view xmlns,
-      const is_element auto&... children
-  )
-      : element_builder(attributes(version, xmlns), children...)
+  template<typename... Args>
+  explicit rss(std::string_view version, std::string_view xmlns, Args&&... args)
+      : element_builder(attributes(version, xmlns), std::forward<Args>(args)...)
   {
   }
 
-  explicit rss(const is_element auto&... children)
-      : rss(default_version, default_xmlns, children...)
+  template<typename... Args>
+  explicit rss(Args&&... args)
+      : element_builder(
+            attributes(default_version, default_xmlns),
+            std::forward<Args>(args)...
+        )
   {
   }
 };
@@ -42,46 +43,49 @@ class HEMPLATE_EXPORT atomLink  // NOLINT *-identifier-naming
     : public element_boolean<"atom:link">
 {
   static auto attributes(
-      attribute_list& list, std::string_view rel, std::string_view type
+      const attribute_list& list, std::string_view rel, std::string_view type
   )
   {
-    list.set({
-        {"rel", rel},
-        {"type", type},
-    });
-    return list;
+    return attribute_list {list, {{"rel", rel}, {"type", type}}};
   }
 
 public:
   static constexpr const auto default_rel = "self";
   static constexpr const auto default_type = "application/rss+xml";
 
+  template<typename... Args>
   explicit atomLink(
       std::string_view rel,
       std::string_view type,
-      attribute_list attrs,
-      const is_element auto&... children
+      const attribute_list& attrs,
+      Args&&... args
   )
-      : element_builder(attributes(attrs, rel, type), children...)
+      : element_builder(
+            attributes(attrs, rel, type), std::forward<Args>(args)...
+        )
   {
   }
 
-  explicit atomLink(
-      std::string_view rel,
-      std::string_view type,
-      const is_element auto&... children
-  )
-      : atomLink(rel, type, {}, children...)
+  template<typename... Args>
+  explicit atomLink(std::string_view rel, std::string_view type, Args&&... args)
+      : element_builder(
+            attributes({}, rel, type), {}, std::forward<Args>(args)...
+        )
   {
   }
 
-  explicit atomLink(attribute_list attrs, const is_element auto&... children)
-      : atomLink(default_rel, default_type, std::move(attrs), children...)
+  template<typename... Args>
+  explicit atomLink(const attribute_list& attrs, Args&&... args)
+      : element_builder(
+            attributes(attrs, default_rel, default_type),
+            std::forward<Args>(args)...
+        )
   {
   }
 
-  explicit atomLink(const is_element auto&... children)
-      : atomLink({}, children...)
+  template<typename... Args>
+  explicit atomLink(Args&&... args)
+      : element_builder(std::forward<Args>(args)...)
   {
   }
 };
