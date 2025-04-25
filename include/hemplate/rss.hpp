@@ -87,7 +87,6 @@ public:
   }
 };
 
-using hemplate::blank;
 using hemplate::comment;
 using hemplate::element;
 using hemplate::transform;

@@ -5,7 +5,6 @@
 namespace hemplate::html
 {
 
-using hemplate::blank;
 using hemplate::comment;
 using hemplate::element;
 using hemplate::transform;
@@ -15,7 +14,7 @@ class doctype : public element
 {
 public:
   explicit doctype()
-      : element("<!DOCTYPE html>", "", "")
+      : element("<!DOCTYPE html>")
   {
   }
 };

@@ -15,7 +15,7 @@ class HEMPLATE_EXPORT comment : public element
 {
 public:
   explicit comment(std::string_view data)
-      : element(std::format("<-- {} -->", data), "", "")
+      : element(std::format("<-- {} -->", data))
   {
   }
 };
@@ -36,15 +36,13 @@ public:
       std::string_view version = default_version,
       std::string_view encoding = default_encoding
   )
-      : element(
-            std::format("<? {}?>", attribute_list {version, encoding}), "", ""
-        )
+      : element(std::format("<? {}?>", attribute_list {version, encoding}))
   {
   }
 };
 
 template<std::ranges::forward_range R>
-blank transform(
+element transform(
     const R& range, based::Procedure<std::ranges::range_value_t<R>> auto proc
 )
 {
@@ -55,7 +53,7 @@ blank transform(
     res.emplace_back(proc(elem));
   }
 
-  return blank {res};
+  return element {res};
 }
 
 }  // namespace hemplate

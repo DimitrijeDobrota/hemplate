@@ -22,10 +22,12 @@ int main()
           html::li {
               {li_attrs, {{"class", "item1"}}},
               "Item 1",
+              "some text",
           },
           html::li {
               {li_attrs, {{"class", "item2"}}},
               "Item 2",
+              "some text",
           },
       },
       html::hr {},

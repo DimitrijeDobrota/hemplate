@@ -26,20 +26,10 @@ void element::render(std::ostream& out, std::size_t indent_value) const
     return;
   }
 
-  if (m_ctag.empty()) {
-    out << indent << m_otag << '\n';
-    return;
-  }
-
-  if (!m_data.empty()) {
-    out << indent << m_otag << m_data << m_ctag << '\n';
-    return;
-  }
-
   if (!m_children.empty()) {
     out << indent << m_otag << '\n';
     render_children(out, indent_value + 2);
-    out << m_ctag << '\n';
+    out << indent << m_ctag << '\n';
     return;
   }
 

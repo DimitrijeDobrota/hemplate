@@ -27,6 +27,9 @@ public:
     Boolean,
   };
 
+  template<based::string_literal Tag, Type MyType>
+  friend class element_builder;
+
 private:
   std::string m_otag;
   std::string m_ctag;
@@ -36,23 +39,6 @@ private:
 
   void render_children(std::ostream& out, std::size_t indent_value) const;
   void render(std::ostream& out, std::size_t indent_value) const;
-
-public:
-  explicit element(std::string_view open_tag)
-      : m_otag(open_tag)
-  {
-  }
-
-  explicit element(
-      std::string_view open_tag,
-      std::string_view close_tag,
-      std::string_view data
-  )
-      : m_otag(open_tag)
-      , m_ctag(close_tag)
-      , m_data(data)
-  {
-  }
 
   explicit element(
       std::string_view open_tag,
@@ -75,6 +61,24 @@ public:
       , m_children(std::begin(children), std::end(children))
   {
   }
+
+public:
+  // NOLINTBEGIN *-explicit-constructor
+  element(std::string_view data)
+      : m_data(data)
+  {
+  }
+
+  element(const is_element auto&... children)
+      : m_children(std::initializer_list<element> {children...})
+  {
+  }
+
+  element(std::span<const element> children)
+      : m_children(std::begin(children), std::end(children))
+  {
+  }
+  // NOLINTEND *-explicit-constructor
 
   explicit operator std::string() const
   {
@@ -105,13 +109,9 @@ class HEMPLATE_EXPORT element_builder<Tag, element::Type::Boolean>
   }
 
 public:
-  explicit element_builder(std::string_view data)
-      : element(open(), close(), data)
-  {
-  }
-
-  explicit element_builder(const is_element auto&... children)
-      : element(open(), close(), children...)
+  template<typename... Args>
+  explicit element_builder(Args&&... args)
+      : element(open(), close(), element(std::forward<Args>(args))...)
   {
   }
 
@@ -119,16 +119,9 @@ public:
       : element(open(), close(), children)
   {
   }
-
-  explicit element_builder(const attribute_list& attrs, std::string_view data)
-      : element(open(attrs), close(), data)
-  {
-  }
-
-  explicit element_builder(
-      const attribute_list& attrs, const is_element auto&... children
-  )
-      : element(open(attrs), close(), children...)
+  template<typename... Args>
+  explicit element_builder(const attribute_list& attrs, Args&&... args)
+      : element(open(attrs), close(), element(std::forward<Args>(args))...)
   {
   }
 
@@ -153,25 +146,6 @@ class HEMPLATE_EXPORT element_builder<Tag, element::Type::Atomic>
 public:
   explicit element_builder(const attribute_list& list = {})
       : element(open(list))
-  {
-  }
-};
-
-class HEMPLATE_EXPORT blank : public element
-{
-public:
-  explicit blank(std::string_view data)
-      : element("", "", data)
-  {
-  }
-
-  explicit blank(const is_element auto&... children)
-      : element("", "", children...)
-  {
-  }
-
-  explicit blank(std::span<const element> children)
-      : element("", "", children)
   {
   }
 };
