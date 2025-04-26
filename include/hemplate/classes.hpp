@@ -23,18 +23,12 @@ public:
 class HEMPLATE_EXPORT xml : public element
 {
 public:
-  static constexpr const auto default_version = "1.0";
-  static constexpr const auto default_encoding = "UTF-8";
-
-  static auto data(std::string_view version, std::string_view encoding)
-  {
-    const attribute_list attrs {{"version", version}, {"encoding", encoding}};
-    return "?xml " + std::string(attrs) + "?";
-  }
+  static constexpr const auto def_version = "1.0";
+  static constexpr const auto def_encoding = "UTF-8";
 
   explicit xml(
-      std::string_view version = default_version,
-      std::string_view encoding = default_encoding
+      std::string_view version = def_version,
+      std::string_view encoding = def_encoding
   )
       : element(std::format("<? {}?>", attribute_list {version, encoding}))
   {

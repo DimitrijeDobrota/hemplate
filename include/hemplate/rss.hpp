@@ -20,20 +20,19 @@ class HEMPLATE_EXPORT rss : public element_boolean<"rss">
   }
 
 public:
-  static constexpr const auto default_version = "2.0";
-  static constexpr const auto default_xmlns = "http://www.w3.org/2005/Atom";
+  static constexpr const auto def_version = "2.0";
+  static constexpr const auto def_xmlns = "http://www.w3.org/2005/Atom";
 
   template<typename... Args>
   explicit rss(std::string_view version, std::string_view xmlns, Args&&... args)
-      : element_builder(attributes(version, xmlns), std::forward<Args>(args)...)
+      : element_boolean(attributes(version, xmlns), std::forward<Args>(args)...)
   {
   }
 
   template<typename... Args>
   explicit rss(Args&&... args)
-      : element_builder(
-            attributes(default_version, default_xmlns),
-            std::forward<Args>(args)...
+      : element_boolean(
+            attributes(def_version, def_xmlns), std::forward<Args>(args)...
         )
   {
   }
@@ -50,8 +49,8 @@ class HEMPLATE_EXPORT atomLink  // NOLINT *-identifier-naming
   }
 
 public:
-  static constexpr const auto default_rel = "self";
-  static constexpr const auto default_type = "application/rss+xml";
+  static constexpr const auto def_rel = "self";
+  static constexpr const auto def_type = "application/rss+xml";
 
   template<typename... Args>
   explicit atomLink(
@@ -60,7 +59,7 @@ public:
       const attribute_list& attrs,
       Args&&... args
   )
-      : element_builder(
+      : element_boolean(
             attributes(attrs, rel, type), std::forward<Args>(args)...
         )
   {
@@ -68,7 +67,7 @@ public:
 
   template<typename... Args>
   explicit atomLink(std::string_view rel, std::string_view type, Args&&... args)
-      : element_builder(
+      : element_boolean(
             attributes({}, rel, type), {}, std::forward<Args>(args)...
         )
   {
@@ -76,16 +75,15 @@ public:
 
   template<typename... Args>
   explicit atomLink(const attribute_list& attrs, Args&&... args)
-      : element_builder(
-            attributes(attrs, default_rel, default_type),
-            std::forward<Args>(args)...
+      : element_boolean(
+            attributes(attrs, def_rel, def_type), std::forward<Args>(args)...
         )
   {
   }
 
   template<typename... Args>
   explicit atomLink(Args&&... args)
-      : element_builder(std::forward<Args>(args)...)
+      : element_boolean(std::forward<Args>(args)...)
   {
   }
 };

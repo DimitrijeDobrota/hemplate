@@ -20,7 +20,6 @@ find_package(based 0.1 CONFIG REQUIRED)
 add_library(
     hemplate_hemplate
     source/classes.cpp
-    source/element.cpp
     source/attribute.cpp
 )
 target_link_libraries(hemplate_hemplate PUBLIC based::based)

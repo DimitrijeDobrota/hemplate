@@ -16,18 +16,18 @@ class HEMPLATE_EXPORT urlset : public element_boolean<"urlset">
   }
 
 public:
-  static constexpr const auto default_xmlns =
+  static constexpr const auto def_xmlns =
       "http://www.sitemaps.org/schemas/sitemap/0.9";
 
   template<typename... Args>
   explicit urlset(std::string_view xmlns, Args&&... args)
-      : element_builder(attributes(xmlns), std::forward<Args>(args)...)
+      : element_boolean(attributes(xmlns), std::forward<Args>(args)...)
   {
   }
 
   template<typename... Args>
   explicit urlset(Args&&... args)
-      : urlset(default_xmlns, std::forward<Args>(args)...)
+      : element_boolean(attribute(def_xmlns), std::forward<Args>(args)...)
   {
   }
 };

@@ -32,6 +32,7 @@ int main()
               "Item 2",
               "some text",
           },
+          transform(vec, [](const auto& e) { return e; }),
       },
       html::hr {},
   };
