@@ -27,14 +27,14 @@ TEST_CASE("boolean", "[element]")
   {
     const auto t = tag {"text"};
 
-    REQUIRE(std::string(t) == "<tag>\n  text\n</tag>\n");
+    REQUIRE(std::string(t) == "<tag>text</tag>\n");
   }
 
   SECTION("attribute data")
   {
     const auto t = tag {{{"attr", "val"}}, "text"};
 
-    REQUIRE(std::string(t) == "<tag attr=\"val\">\n  text\n</tag>\n");
+    REQUIRE(std::string(t) == "<tag attr=\"val\">text</tag>\n");
   }
 
   SECTION("child")
@@ -64,9 +64,7 @@ TEST_CASE("boolean", "[element]")
         child {"text"},
     };
 
-    REQUIRE(
-        std::string(t) == "<tag>\n  <child>\n    text\n  </child>\n</tag>\n"
-    );
+    REQUIRE(std::string(t) == "<tag>\n  <child>text</child>\n</tag>\n");
   }
 
   SECTION("attribute child data")
@@ -77,8 +75,7 @@ TEST_CASE("boolean", "[element]")
     };
 
     REQUIRE(
-        std::string(t)
-        == "<tag attr=\"val\">\n  <child>\n    text\n  </child>\n</tag>\n"
+        std::string(t) == "<tag attr=\"val\">\n  <child>text</child>\n</tag>\n"
     );
   }
 
@@ -88,6 +85,12 @@ TEST_CASE("boolean", "[element]")
     const auto t = tag {vec};
 
     REQUIRE(std::string(t) == "<tag>\n  hello\n  world\n</tag>\n");
+  }
+
+  SECTION("tag element elemetn tag")
+  {
+    const auto t = tag {element {element {tag {}}}};
+    REQUIRE(std::string(t) == "<tag>\n  <tag>\n  </tag>\n</tag>\n");
   }
 }
 
@@ -112,6 +115,7 @@ TEST_CASE("atomic", "[element]")
 
 TEST_CASE("element", "[element]")
 {
+  using tag = element_boolean<"tag">;
   using child = element_boolean<"child">;
 
   SECTION("empty")
@@ -128,39 +132,158 @@ TEST_CASE("element", "[element]")
     REQUIRE(std::string(t) == "text\n");
   }
 
-  SECTION("child")
+  SECTION("tag")
   {
     const auto t = element {
-        child {},
+        tag {},
     };
 
-    REQUIRE(std::string(t) == "<child>\n</child>\n");
+    REQUIRE(std::string(t) == "<tag>\n</tag>\n");
   }
 
-  SECTION("child element")
+  SECTION("tag element")
   {
-    const auto t = child {
+    const auto t = tag {
         element {},
     };
 
-    REQUIRE(std::string(t) == "<child>\n</child>\n");
+    REQUIRE(std::string(t) == "<tag>\n</tag>\n");
   }
 
-  SECTION("element child data")
+  SECTION("element tag")
   {
     const auto t = element {
-        child {"text"},
+        tag {},
     };
 
-    REQUIRE(std::string(t) == "<child>\n  text\n</child>\n");
+    REQUIRE(std::string(t) == "<tag>\n</tag>\n");
   }
 
-  SECTION("child element data")
+  SECTION("element tag data")
   {
-    const auto t = child {
+    const auto t = element {
+        tag {"text"},
+    };
+
+    REQUIRE(std::string(t) == "<tag>text</tag>\n");
+  }
+
+  SECTION("tag element data")
+  {
+    const auto t = tag {
         element {"text"},
     };
 
-    REQUIRE(std::string(t) == "<child>\n  text\n</child>\n");
+    REQUIRE(std::string(t) == "<tag>text</tag>\n");
+  }
+
+  SECTION("tag element data")
+  {
+    const auto t = tag {
+        element {"text"},
+    };
+
+    REQUIRE(std::string(t) == "<tag>text</tag>\n");
+  }
+
+  SECTION("element tag child data")
+  {
+    const auto t = element {
+        tag {
+            child {
+                "text",
+            },
+        },
+    };
+
+    REQUIRE(std::string(t) == "<tag>\n  <child>text</child>\n</tag>\n");
+  }
+
+  SECTION("element tag element child data")
+  {
+    const auto t = element {
+        tag {
+            element {
+                child {
+                    "text",
+                },
+            },
+        },
+    };
+
+    REQUIRE(std::string(t) == "<tag>\n  <child>text</child>\n</tag>\n");
+  }
+
+  SECTION("element tag child element data")
+  {
+    const auto t = element {
+        tag {
+            child {
+                element {
+                    "text",
+                },
+            },
+        },
+    };
+
+    REQUIRE(std::string(t) == "<tag>\n  <child>text</child>\n</tag>\n");
+  }
+
+  SECTION("element tag element child element data")
+  {
+    const auto t = element {
+        tag {
+            element {
+                child {
+                    element {
+                        "text",
+                    },
+                },
+            },
+        },
+    };
+
+    REQUIRE(std::string(t) == "<tag>\n  <child>text</child>\n</tag>\n");
+  }
+
+  SECTION("tag element child data")
+  {
+    const auto t = tag {
+        element {
+            child {
+                "text",
+            },
+        },
+    };
+
+    REQUIRE(std::string(t) == "<tag>\n  <child>text</child>\n</tag>\n");
+  }
+
+  SECTION("tag child element data")
+  {
+    const auto t = tag {
+        child {
+            element {
+                "text",
+            },
+        },
+    };
+
+    REQUIRE(std::string(t) == "<tag>\n  <child>text</child>\n</tag>\n");
+  }
+
+  SECTION("tag element child element data")
+  {
+    const auto t = tag {
+        element {
+            child {
+                element {
+                    "text",
+                },
+            },
+        },
+    };
+
+    REQUIRE(std::string(t) == "<tag>\n  <child>text</child>\n</tag>\n");
   }
 }
