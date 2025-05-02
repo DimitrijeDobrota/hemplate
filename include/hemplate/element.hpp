@@ -35,19 +35,19 @@ class HEMPLATE_EXPORT element_base
   using child_t = std::variant<element_base, std::string>;
   std::vector<child_t> m_cdn;
 
-  void add(const std::ranges::forward_range auto& range)
+  void add(std::ranges::forward_range auto range)
     requires(!std::constructible_from<std::string_view, decltype(range)>)
   {
     m_cdn.reserve(std::size(m_cdn) + std::size(range));
-    m_cdn.insert(std::end(m_cdn), std::begin(range), std::end(range));
+    m_cdn.insert(
+        std::end(m_cdn),
+        std::make_move_iterator(std::begin(range)),
+        std::make_move_iterator(std::end(range))
+    );
   }
 
-  void add(const std::string_view data)
-  {
-    m_cdn.emplace_back(std::string(data));
-  }
-
-  void add(const element_base& elem) { m_cdn.emplace_back(elem); }
+  void add(std::string_view data) { m_cdn.emplace_back(std::string(data)); }
+  void add(element_base elem) { m_cdn.emplace_back(std::move(elem)); }
 
   template<typename... Args>
   explicit element_base(
