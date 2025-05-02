@@ -27,7 +27,7 @@ public:
 
   template<typename... Args>
   explicit urlset(Args&&... args)
-      : element_boolean(attribute(def_xmlns), std::forward<Args>(args)...)
+      : element_boolean(attributes(def_xmlns), std::forward<Args>(args)...)
   {
   }
 };
@@ -38,13 +38,13 @@ using hemplate::transform;
 using hemplate::xml;
 
 // clang-format off
-// NOLINTBEGIN *-identifier-naming
+// NOLINTBEGIN(*naming*)
 using changefreq = element_boolean<"changefreq">;
 using lastmod    = element_boolean<"lastmod">;
 using loc        = element_boolean<"loc">;
 using url        = element_boolean<"url">;
 using priority   = element_boolean<"priority">;
-// NOLINTEND *-identifier-naming
+// NOLINTEND(*naming*)
 // clang-format on
 
 }  // namespace hemplate::sitemap

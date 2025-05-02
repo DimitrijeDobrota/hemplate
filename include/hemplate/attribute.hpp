@@ -15,7 +15,7 @@ class HEMPLATE_EXPORT attribute
   std::string m_value;
 
 public:
-  attribute(std::string_view name)  // NOLINT *-explicit-constructor
+  attribute(std::string_view name)  // NOLINT(*explicit*)
       : m_name(name)
   {
   }
@@ -50,7 +50,7 @@ public:
   attribute_list() = default;
 
   attribute_list(std::initializer_list<attribute> list);
-  attribute_list(attribute attr);  // NOLINT *-explicit-constructor
+  attribute_list(attribute attr);  // NOLINT(*explicit*)
   attribute_list(attribute_list attrs, std::initializer_list<attribute> list);
 
   void set(const attribute_list& list);

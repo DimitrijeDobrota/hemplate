@@ -20,7 +20,7 @@ public:
 };
 
 // clang-format off
-// NOLINTBEGIN *-identifier-naming
+// NOLINTBEGIN(*naming*)
 using abbr       = element_boolean<"abbr">;
 using address    = element_boolean<"address">;
 using a          = element_boolean<"a">;
@@ -134,7 +134,7 @@ using param      = element_atomic<"param">;
 using source     = element_atomic<"source">;
 using track      = element_atomic<"track">;
 using wbr        = element_atomic<"wbr">;
-// NOLINTEND *-identifier-naming
+// NOLINTEND(*naming*)
 // clang-format on
 
 }  // namespace hemplate::html

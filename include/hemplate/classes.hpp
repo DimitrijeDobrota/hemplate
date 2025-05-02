@@ -37,7 +37,8 @@ public:
 
 template<std::ranges::forward_range R>
 element transform(
-    const R& range, based::Procedure<std::ranges::range_value_t<R>> auto proc
+    const R& range,
+    based::Procedure<element, std::ranges::range_value_t<R>> auto proc
 )
 {
   std::vector<element> res;

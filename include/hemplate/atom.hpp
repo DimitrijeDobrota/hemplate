@@ -40,7 +40,7 @@ using hemplate::transform;
 using hemplate::xml;
 
 // clang-format off
-// NOLINTBEGIN *-identifier-naming
+// NOLINTBEGIN(*naming*)
 using author        = element_boolean<"author">;
 using category      = element_boolean<"category">;
 using content       = element_boolean<"content">;
@@ -66,7 +66,7 @@ using title         = element_boolean<"title">;
 using updated       = element_boolean<"updated">;
 using uri           = element_boolean<"uri">;
 using usagePoint    = element_boolean<"usagePoint">;
-// NOLINTEND *-identifier-naming
+// NOLINTEND(*naming*)
 // clang-format on
 
 }  // namespace hemplate::atom

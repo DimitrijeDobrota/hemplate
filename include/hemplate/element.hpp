@@ -35,6 +35,20 @@ class HEMPLATE_EXPORT element_base
   using child_t = std::variant<element_base, std::string>;
   std::vector<child_t> m_cdn;
 
+  void add(const std::ranges::forward_range auto& range)
+    requires(!std::constructible_from<std::string_view, decltype(range)>)
+  {
+    m_cdn.reserve(std::size(m_cdn) + std::size(range));
+    m_cdn.insert(std::end(m_cdn), std::begin(range), std::end(range));
+  }
+
+  void add(const std::string_view data)
+  {
+    m_cdn.emplace_back(std::string(data));
+  }
+
+  void add(const element_base& elem) { m_cdn.emplace_back(elem); }
+
   template<typename... Args>
   explicit element_base(
       std::string_view open_tag, std::string_view close_tag, Args&&... args
@@ -42,23 +56,6 @@ class HEMPLATE_EXPORT element_base
       : m_otag(open_tag)
       , m_ctag(close_tag)
   {
-    const auto add = based::overload {
-        [this](const std::ranges::forward_range auto& range)
-          requires(!std::constructible_from<std::string_view, decltype(range)>)
-        {
-          m_cdn.reserve(std::size(m_cdn) + std::size(range));
-          m_cdn.insert(std::end(m_cdn), std::begin(range), std::end(range));
-        },
-        [this](const std::string_view data)
-        {
-          m_cdn.emplace_back(std::string(data));
-        },
-        [this](const element_base& elem)
-        {
-          m_cdn.emplace_back(elem);
-        },
-    };
-
     m_cdn.reserve(sizeof...(args));
     (add(std::forward<Args>(args)), ...);
   }
@@ -105,7 +102,9 @@ public:
     return ss.str();
   }
 
-  friend std::ostream& operator<<(std::ostream& out, const element_base& element)
+  friend std::ostream& operator<<(
+      std::ostream& out, const element_base& element
+  )
   {
     element.render(out, 0);
     return out;
@@ -117,7 +116,7 @@ class HEMPLATE_EXPORT element : public element_base
 public:
   template<typename... Args>
     requires(!std::same_as<attribute_list, std::remove_cvref_t<Args>> && ...)
-  element(Args&&... args)  // NOLINT *-explicit
+  element(Args&&... args)  // NOLINT(*explicit*)
       : element_base("", "", std::forward<Args>(args)...)
   {
   }

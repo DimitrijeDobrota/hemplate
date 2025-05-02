@@ -2,7 +2,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-// NOLINTBEGIN readability-container-size-empty
+// NOLINTBEGIN(*readability-container-size-empty*)
 
 TEST_CASE("set class", "[attribute_list]")
 {
@@ -89,4 +89,4 @@ TEST_CASE("add", "[attribute_list]")
   REQUIRE(std::string(attrs) == R"(class="first second third")");
 }
 
-// NOLINTEND readability-container-size-empty
+// NOLINTEND(*readability-container-size-empty*)

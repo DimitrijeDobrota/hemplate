@@ -21,7 +21,6 @@ int main()
   std::cout << html::html {
       comment {"Hello this is a comment"},
       html::ul {
-          ul_attrs,
           html::li {
               {li_attrs, {{"class", "item1"}}},
               "Item 1",
@@ -32,7 +31,13 @@ int main()
               "Item 2",
               "some text",
           },
-          transform(vec, [](const auto& e) { return e; }),
+          transform(
+              vec,
+              [](const auto& e)
+              {
+                return e;
+              }
+          ),
       },
       html::hr {},
   };

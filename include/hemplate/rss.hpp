@@ -38,7 +38,7 @@ public:
   }
 };
 
-class HEMPLATE_EXPORT atomLink  // NOLINT *-identifier-naming
+class HEMPLATE_EXPORT atomLink  // NOLINT(*naming*)
     : public element_boolean<"atom:link">
 {
   static auto attributes(
@@ -94,7 +94,7 @@ using hemplate::transform;
 using hemplate::xml;
 
 // clang-format off
-// NOLINTBEGIN *-identifier-naming
+// NOLINTBEGIN(*naming*)
 using author         = element_boolean<"author">;
 using category       = element_boolean<"category">;
 using channel        = element_boolean<"channel">;
@@ -126,7 +126,7 @@ using width          = element_boolean<"width">;
 
 using cloud          = element_atomic<"cloud">;
 using enclosure      = element_atomic<"enclosure">;
-// NOLINTEND *-identifier-naming
+// NOLINTEND(*naming*)
 // clang-format on
 
 }  // namespace hemplate::rss
