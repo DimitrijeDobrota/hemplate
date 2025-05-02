@@ -22,6 +22,14 @@ public:
 
 class HEMPLATE_EXPORT xml : public element
 {
+  static auto attrs(std::string_view version, std::string_view encoding)
+  {
+    return attribute_list {
+        {"version", version},
+        {"encoding", encoding},
+    };
+  }
+
 public:
   static constexpr const auto def_version = "1.0";
   static constexpr const auto def_encoding = "UTF-8";
@@ -30,7 +38,7 @@ public:
       std::string_view version = def_version,
       std::string_view encoding = def_encoding
   )
-      : element(std::format("<? {}?>", attribute_list {version, encoding}))
+      : element(std::format("<? xml {}?>", attrs(version, encoding)))
   {
   }
 };

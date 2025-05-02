@@ -21,9 +21,14 @@ function(add_test NAME)
   catch_discover_tests("${NAME}")
 endfunction()
 
-add_test(attribute)
-add_test(attribute_list)
-add_test(element)
+add_test(attribute_test)
+add_test(attribute_list_test)
+add_test(element_test)
+add_test(classes_test)
+add_test(html_test)
+add_test(atom_test)
+add_test(rss_test)
+add_test(sitemap_test)
 
 # ---- End-of-file commands ----
 

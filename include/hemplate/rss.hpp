@@ -11,79 +11,51 @@ std::string format_time_now();
 
 class HEMPLATE_EXPORT rss : public element_boolean<"rss">
 {
-  static auto attributes(std::string_view version, std::string_view xmlns)
+  static auto def_attrs()
   {
     return attribute_list {
-        {"version", version},
-        {"xmlns", xmlns},
+        {"version", "2.0"},
+        {"xmlns", "http://www.w3.org/2005/Atom"},
     };
   }
 
 public:
-  static constexpr const auto def_version = "2.0";
-  static constexpr const auto def_xmlns = "http://www.w3.org/2005/Atom";
-
   template<typename... Args>
-  explicit rss(std::string_view version, std::string_view xmlns, Args&&... args)
-      : element_boolean(attributes(version, xmlns), std::forward<Args>(args)...)
+    requires(!std::same_as<attribute_list, std::remove_cvref_t<Args>> && ...)
+  explicit rss(Args&&... args)
+      : element_boolean(def_attrs(), std::forward<Args>(args)...)
   {
   }
 
   template<typename... Args>
-  explicit rss(Args&&... args)
-      : element_boolean(
-            attributes(def_version, def_xmlns), std::forward<Args>(args)...
-        )
+  explicit rss(const attribute_list& attrs, Args&&... args)
+      : element_boolean(attrs, std::forward<Args>(args)...)
   {
   }
 };
 
 class HEMPLATE_EXPORT atomLink  // NOLINT(*naming*)
-    : public element_boolean<"atom:link">
+    : public element_atomic<"atom:link">
 {
-  static auto attributes(
-      const attribute_list& list, std::string_view rel, std::string_view type
-  )
+  static auto def_attrs(std::string_view href)
   {
-    return attribute_list {list, {{"rel", rel}, {"type", type}}};
+    return attribute_list {
+        {"rel", "self"},
+        {"type", "application/rss+xml"},
+        {"href", href},
+    };
   }
 
 public:
-  static constexpr const auto def_rel = "self";
-  static constexpr const auto def_type = "application/rss+xml";
-
   template<typename... Args>
-  explicit atomLink(
-      std::string_view rel,
-      std::string_view type,
-      const attribute_list& attrs,
-      Args&&... args
-  )
-      : element_boolean(
-            attributes(attrs, rel, type), std::forward<Args>(args)...
-        )
+  explicit atomLink(std::string_view href)
+      : element_atomic(def_attrs(href))
   {
   }
 
   template<typename... Args>
-  explicit atomLink(std::string_view rel, std::string_view type, Args&&... args)
-      : element_boolean(
-            attributes({}, rel, type), {}, std::forward<Args>(args)...
-        )
-  {
-  }
-
-  template<typename... Args>
-  explicit atomLink(const attribute_list& attrs, Args&&... args)
-      : element_boolean(
-            attributes(attrs, def_rel, def_type), std::forward<Args>(args)...
-        )
-  {
-  }
-
-  template<typename... Args>
-  explicit atomLink(Args&&... args)
-      : element_boolean(std::forward<Args>(args)...)
+  explicit atomLink(const attribute_list& attrs)
+      : element_atomic(attrs)
   {
   }
 };

@@ -81,6 +81,14 @@ TEST_CASE("boolean", "[element]")
         == "<tag attr=\"val\">\n  <child>\n    text\n  </child>\n</tag>\n"
     );
   }
+
+  SECTION("range")
+  {
+    const std::vector<std::string> vec = {"hello", "world"};
+    const auto t = tag {vec};
+
+    REQUIRE(std::string(t) == "<tag>\n  hello\n  world\n</tag>\n");
+  }
 }
 
 TEST_CASE("atomic", "[element]")

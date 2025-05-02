@@ -11,25 +11,24 @@ std::string format_time_now();
 
 class HEMPLATE_EXPORT feed : public element_boolean<"feed">
 {
-  static auto attributes(std::string_view xmlns)
+  static auto def_attrs()
   {
     return attribute_list {
-        {"xmlns", xmlns},
+        {"xmlns", "http://www.w3.org/2005/Atom"},
     };
   }
 
 public:
-  static constexpr const auto def_xmlns = "http://www.w3.org/2005/Atom";
-
   template<typename... Args>
-  explicit feed(std::string_view xmlns, Args&&... args)
-      : element_boolean(attributes(xmlns), std::forward<Args>(args)...)
+    requires(!std::same_as<attribute_list, std::remove_cvref_t<Args>> && ...)
+  explicit feed(Args&&... args)
+      : element_boolean(def_attrs(), std::forward<Args>(args)...)
   {
   }
 
   template<typename... Args>
-  explicit feed(Args&&... args)
-      : element_boolean(attributes(def_xmlns), std::forward<Args>(args)...)
+  explicit feed(const attribute_list& attrs, Args&&... args)
+      : element_boolean(attrs, std::forward<Args>(args)...)
   {
   }
 };
