@@ -10,7 +10,7 @@ using hemplate::element;
 using hemplate::transform;
 using hemplate::xml;
 
-class doctype : public element
+class HEMPLATE_EXPORT doctype : public element
 {
 public:
   explicit doctype()
@@ -134,7 +134,97 @@ using param      = element_atomic<"param">;
 using source     = element_atomic<"source">;
 using track      = element_atomic<"track">;
 using wbr        = element_atomic<"wbr">;
-// NOLINTEND(*naming*)
 // clang-format on
+
+class HEMPLATE_EXPORT aHref : public a
+{
+public:
+  template<typename... Args>
+    requires(!std::same_as<attribute_list, std::remove_cvref_t<Args>> && ...)
+  explicit aHref(std::string_view href, Args&&... args)
+      : a(attribute_list {{"href", href}}, std::forward<Args>(args)...)
+  {
+  }
+};
+
+class HEMPLATE_EXPORT metaUTF8 : public meta
+{
+public:
+  metaUTF8()
+      : meta(attribute_list {
+            {"charset", "UTF8"},
+        })
+  {
+  }
+};
+
+class HEMPLATE_EXPORT metaName : public meta
+{
+public:
+  metaName(std::string_view name, std::string_view content)
+      : meta(attribute_list {
+            {"name", name},
+            {"content", content},
+        })
+  {
+  }
+};
+
+class HEMPLATE_EXPORT linkStylesheet : public link
+{
+public:
+  explicit linkStylesheet(std::string_view href)
+      : link(attribute_list {
+            {"rel", "stylesheet"},
+            {"type", "text/css"},
+            {"href", href},
+        })
+  {
+  }
+};
+
+class HEMPLATE_EXPORT linkRss : public link
+{
+public:
+  linkRss(std::string_view ttl, std::string_view href)
+      : link(attribute_list {
+            {"rel", "alternate"},
+            {"type", "application/atom+xml"},
+            {"title", ttl},
+            {"href", href},
+        })
+  {
+  }
+};
+
+class HEMPLATE_EXPORT linkAtom : public link
+{
+public:
+  linkAtom(std::string_view ttl, std::string_view href)
+      : link(attribute_list {
+            {"rel", "alternate"},
+            {"type", "application/atom+xml"},
+            {"title", ttl},
+            {"href", href},
+        })
+  {
+  }
+};
+
+class HEMPLATE_EXPORT linkIcon : public link
+{
+public:
+  linkIcon(std::string_view sizes, std::string_view href)
+      : link(attribute_list {
+            {"rel", "icon"},
+            {"type", "image/png"},
+            {"sizes", sizes},
+            {"href", href},
+        })
+  {
+  }
+};
+
+// NOLINTEND(*naming*)
 
 }  // namespace hemplate::html

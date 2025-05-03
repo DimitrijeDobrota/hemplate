@@ -23,3 +23,27 @@ TEST_CASE("feed", "[atom/feed]")
     REQUIRE(std::string(feed) == "<feed hello=\"world\">\n</feed>\n");
   }
 }
+
+TEST_CASE("linkHref", "[atom/linkHref]")
+{
+  const atom::linkHref link {"url"};
+
+  REQUIRE(std::string(link) == "<link href=\"url\" />\n");
+}
+
+TEST_CASE("linkSelf", "[atom/linkSelf]")
+{
+  const atom::linkSelf link {"url"};
+
+  REQUIRE(std::string(link) == "<link rel=\"self\" href=\"url\" />\n");
+}
+
+TEST_CASE("linkAlternate", "[atom/linkAlternate]")
+{
+  const atom::linkAlternate link {"url"};
+
+  REQUIRE(
+      std::string(link)
+      == "<link rel=\"alternate\" type=\"text/html\" href=\"url\" />\n"
+  );
+}

@@ -51,7 +51,6 @@ using generator     = element_boolean<"generator">;
 using icon          = element_boolean<"icon">;
 using id            = element_boolean<"id">;
 using intervalBlock = element_boolean<"intervalBlock">;
-using link          = element_boolean<"link">;
 using logo          = element_boolean<"logo">;
 using meterReading  = element_boolean<"meterReading">;
 using name          = element_boolean<"name">;
@@ -65,7 +64,46 @@ using title         = element_boolean<"title">;
 using updated       = element_boolean<"updated">;
 using uri           = element_boolean<"uri">;
 using usagePoint    = element_boolean<"usagePoint">;
-// NOLINTEND(*naming*)
+
+using link          = element_atomic<"link">;
 // clang-format on
+
+class HEMPLATE_EXPORT linkHref : public link
+{
+public:
+  explicit linkHref(std::string_view href)
+      : link(attribute_list {
+            {"href", href},
+        })
+  {
+  }
+};
+
+class HEMPLATE_EXPORT linkSelf : public link
+{
+public:
+  explicit linkSelf(std::string_view href)
+      : link(attribute_list {
+            {"rel", "self"},
+            {"href", href},
+        })
+  {
+  }
+};
+
+class HEMPLATE_EXPORT linkAlternate : public link
+{
+public:
+  explicit linkAlternate(std::string_view href)
+      : link(attribute_list {
+            {"rel", "alternate"},
+            {"type", "text/html"},
+            {"href", href},
+        })
+  {
+  }
+};
+
+// NOLINTEND(*naming*)
 
 }  // namespace hemplate::atom
