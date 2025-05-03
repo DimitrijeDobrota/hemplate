@@ -1,15 +1,15 @@
-#include "hemplate/classes.hpp"
+#include "hemplate/common.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
-TEST_CASE("comment", "[classes/comment]")
+TEST_CASE("comment", "[common/comment]")
 {
   const hemplate::comment comment {"hello world"};
 
   REQUIRE(std::string(comment) == "<-- hello world -->\n");
 }
 
-TEST_CASE("xml", "[classes/xml]")
+TEST_CASE("xml", "[common/xml]")
 {
   SECTION("default")
   {
@@ -37,7 +37,7 @@ TEST_CASE("xml", "[classes/xml]")
   }
 }
 
-TEST_CASE("transform", "[classes/transform]")
+TEST_CASE("transform", "[common/transform]")
 {
   using tag = hemplate::element_boolean<"t">;
   using child = hemplate::element_boolean<"c">;

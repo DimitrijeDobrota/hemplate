@@ -13,13 +13,13 @@ project(
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
 
-find_package(based 0.1 CONFIG REQUIRED)
+find_package(based 0.1.1 CONFIG REQUIRED)
 
 # ---- Declare library ----
 
 add_library(
     hemplate_hemplate
-    source/classes.cpp
+    source/common.cpp
     source/attribute.cpp
 )
 target_link_libraries(hemplate_hemplate PUBLIC based::based)
@@ -75,7 +75,6 @@ if(PROJECT_IS_TOP_LEVEL)
     add_subdirectory(example)
   endif()
 endif()
-
 
 # ---- Developer mode ----
 

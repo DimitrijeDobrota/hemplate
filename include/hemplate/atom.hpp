@@ -1,6 +1,6 @@
 #pragma once
 
-#include "hemplate/classes.hpp"
+#include "hemplate/common.hpp"
 #include "hemplate/hemplate_export.hpp"
 
 namespace hemplate::atom
