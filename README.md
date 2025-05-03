@@ -28,11 +28,15 @@ See the [`BUILDING`](BUILDING.md) document.
 
 ## Version History
 
+- 0.4
+    * Complete rewrite
+	* Full fledged DSL
+- 0.3
+    * Add time format functions
 - 0.2
--   * Add time format functions
+    * Getting a feel for the features and needs
 - 0.1
     * Initial development phase
-    * Getting a feel for the features and needs
 
 
 ## Contributing
