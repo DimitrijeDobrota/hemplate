@@ -8,7 +8,7 @@
 	{
       "kind": "git",
       "repository": "git://git.dimitrijedobrota.com/vcpkg-registry.git",
-      "baseline": "93159a6024f170bb5fedd97daad8b7dd8dbc99ab",
+      "baseline": "cc7113e63d7bb988a70e6b6dd91c5cd1af04bdfb",
       "packages": [ "based" ]
     }
   ]
