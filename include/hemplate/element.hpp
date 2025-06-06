@@ -3,10 +3,11 @@
 #include <span>
 #include <sstream>
 #include <string>
+#include <variant>
 #include <vector>
 
-#include <based/string.hpp>
-#include <based/template.hpp>
+#include <based/functional/overload.hpp>
+#include <based/string/literal.hpp>
 
 #include "hemplate/attribute.hpp"
 #include "hemplate/hemplate_export.hpp"
@@ -14,19 +15,19 @@
 namespace hemplate
 {
 
-template<std::size_t N>
-using string_literal = based::string_literal<N>;
+template<std::size_t n>
+using string_literal = based::string_literal<n>;
 
 class HEMPLATE_EXPORT element_base
 {
   friend class element;
 
-  template<string_literal Tag>
-    requires(Tag.size() > 0)
+  template<string_literal tag>
+    requires(tag.size() > 0)
   friend class element_boolean;
 
-  template<string_literal Tag>
-    requires(Tag.size() > 0)
+  template<string_literal tag>
+    requires(tag.size() > 0)
   friend class element_atomic;
 
   std::string m_otag;
@@ -71,7 +72,9 @@ class HEMPLATE_EXPORT element_base
 
   template<typename... Args>
   explicit element_base(
-      std::string_view open_tag, std::string_view close_tag, Args&&... args
+      std::string_view open_tag,  // NOLINT(*swappable*)
+      std::string_view close_tag,
+      Args&&... args
   )
       : m_otag(open_tag)
       , m_ctag(close_tag)
@@ -123,9 +126,9 @@ class HEMPLATE_EXPORT element_base
 public:
   explicit operator std::string() const
   {
-    std::stringstream ss;
-    ss << *this;
-    return ss.str();
+    std::stringstream sstr;
+    sstr << *this;
+    return sstr.str();
   }
 
   friend std::ostream& operator<<(
@@ -148,15 +151,15 @@ public:
   }
 };
 
-template<string_literal Tag>
-  requires(Tag.size() > 0)
+template<string_literal tag>
+  requires(tag.size() > 0)
 class HEMPLATE_EXPORT element_boolean : public element_base
 {
-  static auto close() { return std::format("</{}>", Tag.data()); }
+  static auto close() { return std::format("</{}>", tag.data()); }
   static auto open(const attribute_list& attrs = {})
   {
-    return attrs.empty() ? std::format("<{}>", Tag.data())
-                         : std::format("<{} {}>", Tag.data(), attrs);
+    return attrs.empty() ? std::format("<{}>", tag.data())
+                         : std::format("<{} {}>", tag.data(), attrs);
   }
 
 public:
@@ -174,14 +177,14 @@ public:
   }
 };
 
-template<string_literal Tag>
-  requires(Tag.size() > 0)
+template<string_literal tag>
+  requires(tag.size() > 0)
 class HEMPLATE_EXPORT element_atomic : public element_base
 {
   static auto open(const attribute_list& attrs = {})
   {
-    return attrs.empty() ? std::format("<{} />", Tag.data())
-                         : std::format("<{} {} />", Tag.data(), attrs);
+    return attrs.empty() ? std::format("<{} />", tag.data())
+                         : std::format("<{} {} />", tag.data(), attrs);
   }
 
 public:

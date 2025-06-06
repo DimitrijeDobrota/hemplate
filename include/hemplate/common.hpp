@@ -2,8 +2,7 @@
 
 #include <array>
 
-#include <based/string.hpp>
-#include <based/type_traits.hpp>
+#include <based/concepts/procedure/procedure.hpp>
 
 #include "hemplate/element.hpp"
 #include "hemplate/hemplate_export.hpp"

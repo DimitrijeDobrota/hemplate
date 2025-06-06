@@ -20,7 +20,7 @@ public:
   {
   }
 
-  attribute(std::string_view name, std::string_view val)
+  attribute(std::string_view name, std::string_view val)  // NOLINT(*swappable*)
       : m_name(name)
       , m_value(val)
   {
@@ -34,12 +34,12 @@ public:
     return name() + "=\"" + value() + "\"";
   }
 
-  const std::string& name() const { return m_name; }
-  const std::string& value() const { return m_value; }
+  [[nodiscard]] const std::string& name() const { return m_name; }
+  [[nodiscard]] const std::string& value() const { return m_value; }
 
   bool operator==(const attribute& rhs) const = default;
 
-  bool empty() const { return value().empty(); }
+  [[nodiscard]] bool empty() const { return value().empty(); }
 
   attribute& append(std::string_view delim, const std::string& val);
 };
@@ -56,7 +56,7 @@ public:
   void set(const attribute_list& list);
   void set(attribute attr);
 
-  bool empty() const
+  [[nodiscard]] bool empty() const
   {
     return m_attributes.empty() && m_class.empty() && m_style.empty();
   }

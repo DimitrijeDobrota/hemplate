@@ -45,31 +45,28 @@ TEST_CASE("transform", "[common/transform]")
   SECTION("direct")
   {
     const std::vector<std::string> vec = {"1", "2"};
-    const auto t = tag {hemplate::transform(
+    const auto tmp = tag {hemplate::transform(
         vec,
-        [](const auto& e)
+        [](const auto& elem)
         {
-          return child {e};
+          return child {elem};
         }
     )};
 
-    REQUIRE(
-        std::string(t)
-        == "<t>\n  <c>1</c>\n  <c>2</c>\n</t>\n"
-    );
+    REQUIRE(std::string(tmp) == "<t>\n  <c>1</c>\n  <c>2</c>\n</t>\n");
   }
 
   SECTION("indirect")
   {
     const std::vector<std::string> vec = {"1", "2"};
-    const auto t = tag {hemplate::transform(
+    const auto tmp = tag {hemplate::transform(
         vec,
-        [](const auto& e)
+        [](const auto& elem)
         {
-          return hemplate::element {e};
+          return hemplate::element {elem};
         }
     )};
 
-    REQUIRE(std::string(t) == "<t>\n  1\n  2\n</t>\n");
+    REQUIRE(std::string(tmp) == "<t>\n  1\n  2\n</t>\n");
   }
 }

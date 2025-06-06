@@ -4,7 +4,7 @@ include(cmake/prelude.cmake)
 
 project(
     hemplate
-    VERSION 0.4.0
+    VERSION 0.4.1
     DESCRIPTION "Simple HTML template engine"
     HOMEPAGE_URL "https://git.dimitrijedobrota.com/hemplate.git"
     LANGUAGES CXX
@@ -13,7 +13,7 @@ project(
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
 
-find_package(based 0.1.1 CONFIG REQUIRED)
+find_package(based 0.2.0 CONFIG REQUIRED)
 
 # ---- Declare library ----
 
